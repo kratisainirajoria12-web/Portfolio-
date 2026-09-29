@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>document.documentElement.classList.add("js")</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Discount Discovery App — Krati, UI/UX Designer</title>
+  <meta name="description" content="Making discount creation simple enough for merchants who run their store alone — and don’t have time to become promotions experts.">
+  <meta name="theme-color" content="#f4efe8">
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..500,100;1,9..144,300..500,100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/base.css">
+  <link rel="stylesheet" href="../css/home.css">
+  <link rel="stylesheet" href="../css/case.css">
+</head>
+<body class="case case--ddapp">
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="nav" id="nav">
+    <div class="wrap">
+      <a class="brand" href="../index.html" aria-label="Krati, home">
+        <span class="brand-mark"><img src="../assets/krati.webp" alt="" width="40" height="40"></span>
+        Krati
+      </a>
+      <nav aria-label="Primary">
+        <ul class="nav-links">
+          <li><a href="../index.html#work">Work</a></li>
+          <li><a href="../index.html#about">About</a></li>
+          <li><a href="../index.html#approach">Approach</a></li>
+          <li><a class="nav-cta" href="../index.html#contact">Say hello</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="case-hero wrap" aria-labelledby="case-title">
+      <a class="back-link" href="../index.html#work"><span aria-hidden="true">←</span> All work</a>
+      <p class="project-num reveal">01 — Shopify app</p>
+      <h1 id="case-title" class="reveal" style="--d:.06s">Discount Discovery App</h1>
+      <p class="lede reveal" style="--d:.12s">Making discount creation simple enough for merchants who run their store alone — and don’t have time to become promotions experts.</p>
+      <dl class="case-meta reveal" style="--d:.18s">
+        <div><dt>Role</dt><dd>Product designer</dd></div>
+        <div><dt>Scope</dt><dd>Research, UX, UI, design system</dd></div>
+        <div><dt>Team</dt><dd>PM, 2 engineers, me</dd></div>
+        <div><dt>Platform</dt><dd>Shopify admin app</dd></div>
+      </dl>
+    </section>
+
+    <div class="wrap">
+      <div class="case-cover reveal" aria-hidden="true">
+        <div class="project-stage">
+          <div class="stage-scene">
+              <span class="ground g-tag"></span>
+              <span class="clay price-tag"><span class="tag-hole"></span><span class="tag-pct">%</span></span>
+              <div class="ui-card ui-card--dd">
+                <div class="ui-top"><span class="ui-dot"></span><span class="ui-line w40"></span></div>
+                <p class="ui-title">Create discount</p>
+                <div class="ui-steps"><span class="on"></span><span class="on"></span><span></span></div>
+                <div class="ui-choice is-active"><span class="ui-radio"></span>Percentage off</div>
+                <div class="ui-choice"><span class="ui-radio"></span>Buy X get Y</div>
+                <div class="ui-choice"><span class="ui-radio"></span>Free shipping</div>
+                <span class="ui-btn">Continue</span>
+              </div>
+            </div>
+        </div>
+      </div>
+
+      <section class="tldr reveal" aria-label="Summary">
+        <div><h2>Problem</h2><p>Merchants wanted to run promotions, but the discount setup forced them to understand every setting before they could launch anything.</p></div>
+        <div><h2>What I did</h2><p>Reframed setup around the merchant’s goal, split it into a guided three-step flow, and added a live preview of what shoppers see.</p></div>
+        <div><h2>Outcome</h2><p>A calmer, faster setup that merchants could finish without help — and a component set the team reused across the app.</p></div>
+      </section>
+
+      <div class="case-body">
+        <aside class="toc" aria-label="On this page">
+          <p>On this page</p>
+          <ol>
+            <li><a href="#problem">Problem</a></li>
+            <li><a href="#role">My role</a></li>
+            <li><a href="#research">Research</a></li>
+            <li><a href="#insights">Insights</a></li>
+            <li><a href="#decisions">Design decisions</a></li>
+            <li><a href="#before-after">Before &amp; after</a></li>
+            <li><a href="#outcomes">Outcomes</a></li>
+            <li><a href="#reflection">Reflection</a></li>
+          </ol>
+        </aside>
+
+        <article>
+          <section class="chapter" id="problem" aria-labelledby="h-problem">
+            <p class="chapter-num">01</p>
+            <h2 id="h-problem">The problem</h2>
+            <div class="prose"><p>The app helped Shopify merchants create and surface discounts, but most of the value was hidden behind a <strong>single, dense configuration form</strong>. Code, type, value, eligibility, limits, combinations and dates all lived on one screen.</p>
+<p>For experienced marketers that was fine. For the small-store owners who made up most installs, it was a wall. They abandoned setup halfway, created discounts that didn’t apply the way they expected, or wrote to support asking which option to pick.</p>
+<p><strong>The question:</strong> how might we help a merchant go from “I want to run a sale” to a live, correct discount — without needing to understand every setting first?</p></div>
+          </section>
+
+          <section class="chapter" id="role" aria-labelledby="h-role">
+            <p class="chapter-num">02</p>
+            <h2 id="h-role">My role</h2>
+            <div class="prose"><p>I was the sole designer, working with a product manager and two engineers. I owned the work end to end: research planning, synthesis, flows, UI, prototype testing and design QA during build.</p></div>
+            <ul class="pill-list" aria-label="Responsibilities"><li>User interviews</li><li>Support-ticket analysis</li><li>Flows & IA</li><li>Prototyping</li><li>Usability testing</li><li>Design QA</li></ul>
+          </section>
+
+          <section class="chapter" id="research" aria-labelledby="h-research">
+            <p class="chapter-num">03</p>
+            <h2 id="h-research">Research</h2>
+            <div class="methods">
+              <div class="method"><h3>Merchant interviews</h3><p>Conversations with small-store owners about how they plan and launch promotions.</p></div>
+              <div class="method"><h3>Support tickets</h3><p>Tagged recent tickets to find which settings caused the most confusion.</p></div>
+              <div class="method"><h3>Competitive review</h3><p>Walked through discount setup in comparable Shopify apps and native admin.</p></div>
+              <div class="method"><h3>Funnel review</h3><p>Looked at where in setup merchants dropped off or saved without publishing.</p></div>
+            </div>
+          </section>
+
+          <section class="chapter" id="insights" aria-labelledby="h-insights">
+            <p class="chapter-num">04</p>
+            <h2 id="h-insights">What we learned</h2>
+            <div class="insights">
+              <div class="insight"><span class="insight-n" aria-hidden="true">1</span><div><h3>Merchants think in goals, not settings</h3><p>They described promotions as outcomes — “clear old stock”, “thank loyal customers” — never as a discount type plus conditions.</p><blockquote>“I just want 20% off for the weekend. Why do I need to decide all this?”</blockquote></div></div>
+              <div class="insight"><span class="insight-n" aria-hidden="true">2</span><div><h3>Uncertainty, not effort, caused drop-off</h3><p>People could fill the form. What stopped them was not knowing what the shopper would actually see once it went live.</p></div></div>
+              <div class="insight"><span class="insight-n" aria-hidden="true">3</span><div><h3>Advanced options were needed — occasionally</h3><p>Usage limits and combinations mattered, but only for a minority of discounts. They shouldn’t block the common case.</p></div></div>
+            </div>
+          </section>
+
+          <section class="chapter" id="decisions" aria-labelledby="h-decisions">
+            <p class="chapter-num">05</p>
+            <h2 id="h-decisions">Design decisions</h2>
+            <div class="decisions">
+              <div class="decision"><h3>Start with the goal</h3><p>The first screen now asks one question — what do you want to offer? — with plain-language examples under each option.</p><p class="why"><b>Why:</b> Choosing an outcome first narrows every later decision, so merchants see only the settings that apply.</p></div>
+              <div class="decision"><h3>Three steps, with smart defaults</h3><p>Offer → who and what it applies to → when it runs. Sensible defaults are pre-filled, and advanced settings sit behind a single “More options” disclosure.</p><p class="why"><b>Why:</b> Keeps the common path short without removing control for power users.</p></div>
+              <div class="decision"><h3>A live shopper preview</h3><p>A persistent card shows exactly how the discount will appear to customers, updating as the merchant edits.</p><p class="why"><b>Why:</b> Directly addresses the biggest source of anxiety: “what will this actually look like?”</p></div>
+            </div>
+          </section>
+
+          <section class="chapter" id="before-after" aria-labelledby="h-ba">
+            <p class="chapter-num">06</p>
+            <h2 id="h-ba">Before &amp; after</h2>
+            <div class="compare">
+              <figure>
+                <span class="tag">Before</span>
+                <div class="screen" role="img" aria-label="Before: One long form. Every setting, visible at once, with no guidance on where to begin.">
+                  <div class="screen-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+                  <div class="screen-body" aria-hidden="true">
+<div class="m-h">New discount</div>
+<div class="m-col">
+  <div class="m-field"><b>Discount code</b>SUMMER-SALE-24</div>
+  <div class="m-row"><div class="m-field" style="flex:1"><b>Type</b>Select… ▾</div><div class="m-field" style="flex:1"><b>Value</b>—</div></div>
+  <div class="m-field"><b>Applies to</b>Collections / Products / All ▾</div>
+  <div class="m-row"><div class="m-field" style="flex:1"><b>Min. requirement</b>None ▾</div><div class="m-field" style="flex:1"><b>Eligibility</b>Everyone ▾</div></div>
+  <div class="m-row"><div class="m-field" style="flex:1"><b>Usage limits</b>—</div><div class="m-field" style="flex:1"><b>Combinations</b>—</div></div>
+  <div class="m-row"><div class="m-field" style="flex:1"><b>Start</b>dd/mm/yyyy</div><div class="m-field" style="flex:1"><b>End</b>dd/mm/yyyy</div></div>
+  <div><span class="m-btn m-btn--muted">Save</span></div>
+</div>
+<span class="m-note" style="right:4cqw;top:14cqw">Every option on one screen — merchants didn’t know where to start</span>
+</div>
+                </div>
+                <figcaption><b>Before</b>One long form. Every setting, visible at once, with no guidance on where to begin.</figcaption>
+              </figure>
+              <figure>
+                <span class="tag tag--after">After</span>
+                <div class="screen" role="img" aria-label="After: A guided first step that starts from the merchant’s goal, with a live preview of the result.">
+                  <div class="screen-bar" aria-hidden="true"><i></i><i></i><i></i></div>
+                  <div class="screen-body" aria-hidden="true">
+<div class="m-small">Step 1 of 3</div>
+<div class="m-h">What do you want to offer?</div>
+<div class="m-col">
+  <div class="m-choice on"><b>% off</b> &nbsp;<span class="m-small">e.g. 20% off everything</span></div>
+  <div class="m-choice"><b>Buy X, get Y</b> &nbsp;<span class="m-small">e.g. buy 2, get 1 free</span></div>
+  <div class="m-choice"><b>Free shipping</b> &nbsp;<span class="m-small">over a minimum spend</span></div>
+  <div class="m-card m-row" style="justify-content:space-between"><span class="m-small">Customers will see</span><b>20% off · ends Sun</b></div>
+  <div class="m-row" style="justify-content:flex-end"><span class="m-btn">Continue</span></div>
+</div>
+<span class="m-note m-note--good" style="left:5cqw;bottom:5cqw">Start from the goal, not the settings</span>
+</div>
+                </div>
+                <figcaption><b>After</b>A guided first step that starts from the merchant’s goal, with a live preview of the result.</figcaption>
+              </figure>
+            </div>
+          </section>
+
+          <section class="chapter" id="outcomes" aria-labelledby="h-outcomes">
+            <p class="chapter-num">07</p>
+            <h2 id="h-outcomes">Outcomes</h2>
+            <!-- Add your measured results here (e.g. conversion rate, completion rate, time on task). -->
+            <div class="outcomes">
+              <div class="outcome"><p class="big">7 → 3</p><p>decisions needed before a basic discount can go live</p></div>
+              <div class="outcome"><p class="big">1 flow</p><p>for every discount type, replacing separate forms</p></div>
+              <div class="outcome"><p class="big">Reusable</p><p>choice cards, preview and stepper became shared components</p></div>
+            </div>
+          </section>
+
+          <section class="chapter" id="reflection" aria-labelledby="h-reflection">
+            <p class="chapter-num">08</p>
+            <h2 id="h-reflection">Reflection</h2>
+            <div class="prose"><p>If I did this again I’d instrument the old flow earlier, so we had a cleaner baseline to compare against. I’d also like to explore templates — “weekend sale”, “first-order discount” — as an even faster starting point for new merchants.</p></div>
+          </section>
+        </article>
+      </div>
+
+      <a class="next" href="beauty-by-bie.html" style="--next-bg:#ecd4cb">
+        <span><small>Next project</small><strong>Beauty by Bie</strong></span>
+        <span class="arrow-circle" aria-hidden="true">→</span>
+      </a>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap">
+      <p>© <span data-year>2026</span> Krati. Designed with care, built by hand.</p>
+      <ul>
+        <li><a href="../index.html#contact">Contact</a></li>
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Behance</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <script src="../js/main.js" defer></script>
+</body>
+</html>
