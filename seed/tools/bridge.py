@@ -1,3 +1,6 @@
+"""Seed -> sprout -> soil bridge. Replaces bloom frames 23..62 with K new frames.
+Inputs: SRC is the ORIGINAL 160-frame bloom folder (it reads f022 and f063), plus spr_a2.npy (= tools/sprout63_mask.npy, the sprout cut-out mask from sprite.py).
+Run: python3 bridge.py <outdir> 160, then write the frames to bloom/f023..f182.webp.
 A: a slim sprout pushes out of the cracked seed (camera drifts up with it)
 B: the camera tilts up, the shoot climbs into the soil
 C: the real sprout breaks out through the mound and hands off to frame 63"""
