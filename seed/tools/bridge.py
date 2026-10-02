@@ -1,6 +1,3 @@
-"""Seed -> sprout -> soil bridge. Replaces bloom frames 23..62 with K new frames.
-Inputs: SRC is the ORIGINAL 160-frame bloom folder (it reads f022 and f063), plus spr_a2.npy (= tools/sprout63_mask.npy, the sprout cut-out mask from sprite.py).
-Run: python3 bridge.py <outdir> 160, then write the frames to bloom/f023..f182.webp.
 A: a slim sprout pushes out of the cracked seed (camera drifts up with it)
 B: the camera tilts up, the shoot climbs into the soil
 C: the real sprout breaks out through the mound and hands off to frame 63"""
@@ -58,7 +55,7 @@ GROUND=cv2.GaussianBlur(GROUND.astype(np.float32),(0,0),1.6)
 
 # ---------- the slim sprout, drawn like a lit tube ----------
 SS=3
-def draw_sprout(tip_y,base_y,cx,sway,bud_len=58,bud_r=11.5,stem_r=4.6):
+def draw_sprout(tip_y,base_y,cx,sway,bud_len=74,bud_r=16,stem_r=7.5):
     """returns colour, alpha (world-screen px). tip_y<base_y; centreline bends gently."""
     h=int(base_y-tip_y)+4
     if h<3:return None
@@ -110,7 +107,7 @@ CX=638
 seedmask=np.zeros((H,W),np.float32)   # inside the shell the shoot is seen through it
 cv2.ellipse(seedmask,(CX,214),(62,80),0,0,360,1,-1);seedmask=cv2.GaussianBlur(seedmask,(0,0),3)
 seedmask[:SEEDTOP-6]=0
-D_END=870;PW=-150                      # plate bottom edge in world px; plate fills the screen when D=D_END
+D_END=680;PW=40                        # plate bottom edge in world px; plate fills the screen when D=D_END
 spr=np.zeros((H,W),np.float32);spr[Y0:Y1,X0:X1]=np.load('spr_a2.npy')
 noise=cv2.GaussianBlur(np.random.default_rng(3).standard_normal((H,W)).astype(np.float32),(0,0),9)*40
 edge_wob=np.zeros(W,np.float32);r=np.random.default_rng(7)
@@ -119,22 +116,22 @@ for f,a in((3,14),(8,8),(21,5),(53,3)):edge_wob+=a*np.sin(np.arange(W)/W*f*6.283
 for j in range(K):
     t=(j+1)/(K+1)
     # camera: drift with the shoot (A), then tilt up to the surface (B)
-    camD=lambda t:lerp(0,140,ss(rng(t,0,.36)))+(D_END-140)*ss(rng(t,.34,.78))
+    camD=lambda t:lerp(0,60,ss(rng(t,0,.26)))+(D_END-60)*ss(rng(t,.22,.62))
     D=camD(t);blurL=min(abs(camD(t+1/(K+1))-D)*.45,5)         # vertical motion blur ~ the pan between two frames
     Di=int(round(D))
     top=TOP-Di
     img=WORLD[top:top+H].copy() if top>=0 else None
     # the slim shoot, in world px
-    g=rng(t,0,.40)
-    tipw=lerp(EMB-55,SEEDTOP-150,1-(1-g)**1.6)            # out of the notch and up
-    tipw=tipw-260*ss(rng(t,.40,.70))                         # keeps climbing into the soil
+    g=rng(t,0,.26)
+    tipw=lerp(EMB-55,SEEDTOP-85,1-(1-g)**1.6)             # out of the notch
+    tipw=tipw-200*ss(rng(t,.24,.55))                         # keeps climbing into the soil
     sway=3*np.sin(t*9)
     out=draw_sprout(tipw+D,EMB+D,CX,sway)
     if out:
         C,A,x0,y0=out
         inside=np.roll(seedmask,Di,axis=0) if Di<H else np.zeros_like(seedmask)
         if Di>0 and Di<H: inside[:Di]=0
-        vis=1-(1-.55*ss(rng(t,0,.14)))*inside                                     # through the shell it reads softer
+        vis=1-(1-.55*ss(rng(t,0,.1)))*inside                                     # through the shell it reads softer
         blit(img,C,A,x0,y0,1.0,vis)
     # soil plate sliding in from above, fading into the dark at its crumbly bottom edge
     o=PW-H+D                                                  # plate top on screen
@@ -145,11 +142,11 @@ for j in range(K):
         else:P[:]=PX[-oi:-oi+H]
         bot=o+H
         pa=ss((bot-yy+edge_wob[None,:]+noise*.6)/150.)
-        pa=np.maximum(pa,ss(rng(t,.60,.76)))*(yy>=o)
+        pa=np.maximum(pa,ss(rng(t,.48,.62)))*(yy>=o)
         img=img*(1-pa[...,None])+P*pa[...,None]
         # the real sprout breaking out of the mound
-        hand0=ss(rng(t,.88,1.0))
-        e=ss(rng(t,.66,.98))
+        hand0=ss(rng(t,.86,1.0))
+        e=ss(rng(t,.45,.95))
         sh=(1-e)**1.3*260
         if e>0:
             M=np.float32([[1,0,0],[0,1,o+sh]])
@@ -161,7 +158,7 @@ for j in range(K):
             a=As*clip*pa
             img=img*(1-a[...,None])+Cs*a[...,None]
     if blurL>1.5:img=cv2.blur(img,(1,int(round(blurL))|1))
-    img=img*(1-SPA[...,None])+lerp(SP22,SP63,ss(rng(t,.4,.75)))*SPA[...,None]
+    img=img*(1-SPA[...,None])+lerp(SP22,SP63,ss(rng(t,.3,.6)))*SPA[...,None]
     hand=ss(rng(t,.93,1.0))
     if hand>0:img=img*(1-hand)+F63*hand
     cv2.imwrite(f'{OUT}/b{j:03d}.png',np.clip(img,0,255).astype(np.uint8))
