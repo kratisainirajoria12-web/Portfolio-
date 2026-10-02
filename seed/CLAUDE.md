@@ -21,7 +21,7 @@ Krati is a product designer. This is her scroll-driven portfolio site. Her 3D ca
 | `dive/` | Krati's own soil-dive video. Sheets of 4 frames stacked vertically (`s000.webp`…), 151 frames |
 | `grow/` | Underground: seed cracks and roots. 120 frames |
 | `bloom/` | Sprout to full bloom. 280 files: E239–261 (0–22), then a 160-frame sprout bridge (23–182, made by `tools/bridge.py`), then E315–440 (183–279). The disc is recoloured brown. `bloomIdx()` in main.js maps the story frame (old 0–159 scale) to a file |
-| `hold/` | 8 s seamless "living photograph" loop for the sunflower pause. Sheets of 4, 96 frames, played at 12 fps |
+| `hold/` | Her reference clip for the sunflower pause (camera eases back, flower sways, butterflies). Sheets of 4, 120 frames (24 fps clip, every 2nd frame), played at 12 fps forward and back; it starts on the last bloom frame and rewinds to it as the reader scrolls in or out (`holdT` in main.js) |
 | `zoom/` | Push into the flower head. 22 frames |
 | `tools/` | Python/OpenCV scripts that generated the derived frames (paths inside point to the old scratch folder) |
 | `SEED-keyframes.txt` | Motion data extracted from theseed.volm.studio, the reference for the motion feel |
@@ -45,8 +45,8 @@ Krati is a product designer. This is her scroll-driven portfolio site. Her 3D ca
 - Keep the "v1" style. She rejected a full SEED-site restyle and a cartoonish 3D growth.
 - Soil dive: her video, ending on the upright seed in the soil, then a straight cut to the roots clip. She removed both the morph transition and the black-fade transition.
 - Sprout (Day ~19–28): a sprout with a closed pointed bud pushes out of the cracked seed (her reference image). She asked twice for it thicker and for the soil to be closer to the seed: the soil now sits just above the seed and the camera tilts up a short way, then the real sprout breaks out through the soil mound and hands off to the footage. The underground shoot is rendered as a lit tube in `tools/bridge.py`; the one above the soil is the real footage.
-- Sunflower pause: very subtle sway of flower, petals and leaves. Grass and trees move in a breeze. Sparse pollen, slow drift only.
-- Sunflower centre is brown. She tried a different flower image, then asked to undo it.
+- Sunflower pause: plays her reference video's motion (camera eases back, the flower sways, butterflies cross, grass moves). Sparse pollen, slow drift only.
+- Sunflower centre is dark brown like a real sunflower, matched to her reference video (`tools/recolor.py`, `tools/apply_disc.py`: bloom 240–279 and zoom/). She tried a different flower image, then asked to undo it.
 - End of the story: no rain of seeds. The scene darkens and a single seed falls.
 
 ## Still to do
