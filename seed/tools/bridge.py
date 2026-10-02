@@ -58,7 +58,7 @@ GROUND=cv2.GaussianBlur(GROUND.astype(np.float32),(0,0),1.6)
 
 # ---------- the slim sprout, drawn like a lit tube ----------
 SS=3
-def draw_sprout(tip_y,base_y,cx,sway,bud_len=74,bud_r=16,stem_r=7.5):
+def draw_sprout(tip_y,base_y,cx,sway,bud_len=92,bud_r=22,stem_r=11):
     """returns colour, alpha (world-screen px). tip_y<base_y; centreline bends gently."""
     h=int(base_y-tip_y)+4
     if h<3:return None
@@ -108,9 +108,9 @@ def blit(img,C,A,x0,y0,alpha=1.0,mask=None):
 SEEDTOP,SEEDBOT,EMB=134,292,262      # frame-22 px: seed notch, seed bottom, base of the embryo
 CX=638
 seedmask=np.zeros((H,W),np.float32)   # inside the shell the shoot is seen through it
-cv2.ellipse(seedmask,(CX,214),(62,80),0,0,360,1,-1);seedmask=cv2.GaussianBlur(seedmask,(0,0),3)
+cv2.ellipse(seedmask,(CX,214),(64,82),0,0,360,1,-1);seedmask=cv2.GaussianBlur(seedmask,(0,0),3)
 seedmask[:SEEDTOP-6]=0
-D_END=680;PW=40                        # plate bottom edge in world px; plate fills the screen when D=D_END
+D_END=610;PW=110                       # plate bottom edge in world px; plate fills the screen when D=D_END
 spr=np.zeros((H,W),np.float32);spr[Y0:Y1,X0:X1]=np.load('spr_a2.npy')
 noise=cv2.GaussianBlur(np.random.default_rng(3).standard_normal((H,W)).astype(np.float32),(0,0),9)*40
 edge_wob=np.zeros(W,np.float32);r=np.random.default_rng(7)
@@ -119,22 +119,23 @@ for f,a in((3,14),(8,8),(21,5),(53,3)):edge_wob+=a*np.sin(np.arange(W)/W*f*6.283
 for j in range(K):
     t=(j+1)/(K+1)
     # camera: drift with the shoot (A), then tilt up to the surface (B)
-    camD=lambda t:lerp(0,60,ss(rng(t,0,.26)))+(D_END-60)*ss(rng(t,.22,.62))
+    camD=lambda t:lerp(0,40,ss(rng(t,0,.24)))+(D_END-40)*ss(rng(t,.2,.58))
     D=camD(t);blurL=min(abs(camD(t+1/(K+1))-D)*.45,5)         # vertical motion blur ~ the pan between two frames
     Di=int(round(D))
     top=TOP-Di
     img=WORLD[top:top+H].copy() if top>=0 else None
     # the slim shoot, in world px
     g=rng(t,0,.26)
-    tipw=lerp(EMB-55,SEEDTOP-85,1-(1-g)**1.6)             # out of the notch
-    tipw=tipw-200*ss(rng(t,.24,.55))                         # keeps climbing into the soil
+    tipw=lerp(EMB-55,SEEDTOP-95,1-(1-g)**1.6)             # out of the notch
+    tipw=tipw-140*ss(rng(t,.22,.5))                         # keeps climbing into the soil
     sway=3*np.sin(t*9)
     out=draw_sprout(tipw+D,EMB+D,CX,sway)
     if out:
         C,A,x0,y0=out
         inside=np.roll(seedmask,Di,axis=0) if Di<H else np.zeros_like(seedmask)
         if Di>0 and Di<H: inside[:Di]=0
-        vis=1-(1-.55*ss(rng(t,0,.1)))*inside                                     # through the shell it reads softer
+        vis=1-(1-.5*ss(rng(t,0,.1)))*inside                                     # through the shell it reads softer
+        vis=vis*ss((EMB+D-yy)/70.)                           # the shoot's foot melts into the embryo, no hard end
         blit(img,C,A,x0,y0,1.0,vis)
     # soil plate sliding in from above, fading into the dark at its crumbly bottom edge
     o=PW-H+D                                                  # plate top on screen
@@ -145,11 +146,11 @@ for j in range(K):
         else:P[:]=PX[-oi:-oi+H]
         bot=o+H
         pa=ss((bot-yy+edge_wob[None,:]+noise*.6)/150.)
-        pa=np.maximum(pa,ss(rng(t,.48,.62)))*(yy>=o)
+        pa=np.maximum(pa,ss(rng(t,.44,.58)))*(yy>=o)
         img=img*(1-pa[...,None])+P*pa[...,None]
         # the real sprout breaking out of the mound
         hand0=ss(rng(t,.86,1.0))
-        e=ss(rng(t,.45,.95))
+        e=ss(rng(t,.40,.95))
         sh=(1-e)**1.3*260
         if e>0:
             M=np.float32([[1,0,0],[0,1,o+sh]])
