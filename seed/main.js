@@ -271,8 +271,10 @@ function frame(now){
   tintEl.style.opacity=G.tint(vu).toFixed(3);{const dv=G.dof(u<TL.end[0]?u:0);dofEl.style.opacity=dv.toFixed(3);dofEl.style.display=dv>.01?'block':'none';}
   shot(u,time);
   grainTick(now);
-  // the zoom into the flower ends in dark brown to black; the seed head then rises out of that dark
-  {const dv=Math.min(ss(range(u,1392,1436)),1-ss(range(u,1446,1500)));dipEl.style.opacity=dv>0?dv.toFixed(3):'0';}
+  // the end: on the seeds at the heart of the flower, dark brown closes in slowly from the edges until it fills the
+  // screen; it lifts again only for Krati's meadow at the loop
+  {const k=ss(range(u,1520,1700)),dv=Math.min(ss(range(u,1520,1560)),1-ss(range(u,1730,1795)));
+   dipEl.style.opacity=dv>0?dv.toFixed(3):'0';if(dv>0)dipEl.style.setProperty('--r',(70-110*k).toFixed(1)+'%');}
   dawnEl.style.opacity=(u>600&&u<820)?.5*Math.min(ss(range(u,610,680)),1-ss(range(u,740,820))):0;
   pollenTick(vu,time,vel,dt);
   scrimEl.style.opacity=(u>660&&u<1430)?Math.min(ss(range(u,660,720)),1-ss(range(u,1400,1430))):0;
