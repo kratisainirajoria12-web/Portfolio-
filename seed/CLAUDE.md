@@ -48,6 +48,7 @@ Krati is a product designer. This is her scroll-driven portfolio site. Her 3D ca
 - Sunflower pause: plays her reference video's motion (camera eases back, the flower sways, butterflies cross, grass moves). Sparse pollen, slow drift only.
 - From the time the flower opens (bloom 248 on) and through the zoom-in, the flower is her reference flower (first frame of her clip, `tools/ref_v001.png`): `tools/head.py` puts it on each late bloom frame at that frame's flower size, and the zoom is a camera push into that frame. Her clip read frames from `reff/`; point `head.py` at `ref_v001.png` to rerun.
 - Sunflower centre is dark brown like a real sunflower, matched to her reference video (`tools/recolor.py`, `tools/apply_disc.py`: bloom 240–279 and zoom/). No brown band on the petals: their bases reach the florets in yellow, as in the reference (`petal_fix`; the close-up zoom frames keep their own petal bases). She tried a different flower image, then asked to undo it.
+- Zoom to seed head: the zoom ends in a dark brown-to-black dip (`#dip`, u 1392–1500 in main.js) and the 3D seed head rises out of it. She chose to keep the 3D seed head and the falling seed.
 - End of the story: no rain of seeds. The scene darkens and a single seed falls.
 
 ## Still to do

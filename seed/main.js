@@ -62,7 +62,7 @@ function sizeCanvas(c){const d=Math.min(devicePixelRatio||1,2);c.width=Math.roun
 const portrait=()=>innerHeight>innerWidth*1.1;
 const topCol=new WeakMap(),probe=document.createElement('canvas');probe.width=probe.height=1;const pctx=probe.getContext('2d',{willReadFrequently:true});
 function skyOf(f){let c=topCol.get(f);if(!c){pctx.drawImage(f,0,0,f.naturalWidth,6,0,0,1,1);const d=pctx.getImageData(0,0,1,1).data;c=[d[0],d[1],d[2]];topCol.set(f,c);}return c;}
-const grainEl=$('#grain'),scrimEl=$('#scrim'),dawnEl=$('#dawn'),vigEl=$('#vig');
+const dipEl=$('#dip'),grainEl=$('#grain'),scrimEl=$('#scrim'),dawnEl=$('#dawn'),vigEl=$('#vig');
 
 /* golden pollen: drifts in front of the footage underground and around the bloom; scroll speed stirs it */
 const pcv=$('#pollen'),pctx2=pcv.getContext('2d');
@@ -271,6 +271,8 @@ function frame(now){
   tintEl.style.opacity=G.tint(vu).toFixed(3);{const dv=G.dof(u<TL.end[0]?u:0);dofEl.style.opacity=dv.toFixed(3);dofEl.style.display=dv>.01?'block':'none';}
   shot(u,time);
   grainTick(now);
+  // the zoom into the flower ends in dark brown to black; the seed head then rises out of that dark
+  {const dv=Math.min(ss(range(u,1392,1436)),1-ss(range(u,1446,1500)));dipEl.style.opacity=dv>0?dv.toFixed(3):'0';}
   dawnEl.style.opacity=(u>600&&u<820)?.5*Math.min(ss(range(u,610,680)),1-ss(range(u,740,820))):0;
   pollenTick(vu,time,vel,dt);
   scrimEl.style.opacity=(u>660&&u<1430)?Math.min(ss(range(u,660,720)),1-ss(range(u,1400,1430))):0;
