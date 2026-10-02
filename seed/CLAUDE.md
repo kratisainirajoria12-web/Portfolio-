@@ -46,7 +46,7 @@ Krati is a product designer. This is her scroll-driven portfolio site. Her 3D ca
 - Soil dive: her video, ending on the upright seed in the soil, then a straight cut to the roots clip. She removed both the morph transition and the black-fade transition.
 - Sprout (Day ~19–28): a sprout with a closed pointed bud pushes out of the cracked seed (her reference image). She asked twice for it thicker and for the soil to be closer to the seed: the soil now sits just above the seed and the camera tilts up a short way, then the real sprout breaks out through the soil mound and hands off to the footage. The underground shoot is rendered as a lit tube in `tools/bridge.py`; the one above the soil is the real footage.
 - Sunflower pause: plays her reference video's motion (camera eases back, the flower sways, butterflies cross, grass moves). Sparse pollen, slow drift only.
-- Sunflower centre is dark brown like a real sunflower, matched to her reference video (`tools/recolor.py`, `tools/apply_disc.py`: bloom 240–279 and zoom/). She tried a different flower image, then asked to undo it.
+- Sunflower centre is dark brown like a real sunflower, matched to her reference video (`tools/recolor.py`, `tools/apply_disc.py`: bloom 240–279 and zoom/). No brown band on the petals: their bases reach the florets in yellow, as in the reference (`petal_fix`; the close-up zoom frames keep their own petal bases). She tried a different flower image, then asked to undo it.
 - End of the story: no rain of seeds. The scene darkens and a single seed falls.
 
 ## Still to do
