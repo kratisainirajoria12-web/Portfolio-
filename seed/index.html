@@ -739,6 +739,6 @@ function open(a){back=a;title.textContent=a.dataset.title;view.textContent='';
   box.hidden=false;document.body.classList.add('case-open');close.focus();}
 function shut(){box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
 document.querySelectorAll('a.card[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
-close.addEventListener('click',shut);addEventListener('message',e=>{if(e.data&&e.data.type==='close-case'&&!box.hidden)shut();});addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
+close.addEventListener('click',shut);addEventListener('message',e=>{if(!e.data||box.hidden)return;if(e.data.type==='close-case')shut();else if(e.data.type==='case-title'&&typeof e.data.title==='string')title.textContent=e.data.title;});addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
 </script>
 
