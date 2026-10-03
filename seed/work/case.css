@@ -55,19 +55,27 @@ section > p + p{margin-top:12px}
 .note{font-size:clamp(14px,1.15vw,17px)}
 
 .fig{margin-top:clamp(32px,4vw,64px)}
-.shot{border-radius:clamp(14px,1.6vw,24px);overflow:hidden;transition:transform .7s var(--ease),box-shadow .7s var(--ease),filter .6s var(--ease)}
-.shot img{width:100%}
-.lift:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 34px 60px -30px rgba(15,25,60,.55)}
-.glow:hover{filter:saturate(1.1) brightness(1.03)}
+/* images: the shadow follows each image's own rounded corners (transparent outside them), so nothing square shows on hover */
+.shot,.persona{position:relative}
+/* the tilt sits on the image and its light (the box itself carries the scroll reveal) */
+.shot > img,.persona > img,.shot > .sheen,.persona > .sheen{transform:perspective(1100px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px)) scale(var(--sc,1));
+  transition:transform .7s var(--ease),filter .7s var(--ease),opacity .5s var(--ease)}
+.shot img,.persona img{width:100%;filter:drop-shadow(0 0 0 rgba(15,25,60,0))}
+.hov{--ty:-8px;--sc:1.012}
+.hov > img,.hov > .sheen{transition:transform .25s ease-out,filter .7s var(--ease),opacity .5s var(--ease)}
+.hov > img{filter:drop-shadow(0 26px 30px rgba(15,25,60,.28)) drop-shadow(0 6px 10px rgba(15,25,60,.12)) saturate(1.06)}
+/* a soft light that follows the cursor across the image, clipped to the image's own shape */
+.sheen{position:absolute;inset:0;pointer-events:none;opacity:0;mix-blend-mode:soft-light;
+  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.8),rgba(255,255,255,0) 42%);
+  -webkit-mask-size:100% 100%;mask-size:100% 100%}
+.hov > .sheen{opacity:1}
 .grid{display:grid;gap:clamp(8px,1vw,14px)}
 .g2{grid-template-columns:1fr 1fr}
 .g4{grid-template-columns:repeat(4,1fr)}
 @media (max-width:640px){.g4{grid-template-columns:1fr 1fr}.g2.stack{grid-template-columns:1fr}}
 .strip{display:flex;gap:clamp(8px,1vw,14px)}
 .strip > *{min-width:0}
-.persona{transition:transform .6s var(--ease),filter .6s var(--ease)}
-.persona:hover{transform:translateY(-8px) rotate(-.6deg)}
-.persona img{border-radius:6px;box-shadow:0 10px 24px -18px rgba(0,0,0,.6)}
+
 
 .split{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:clamp(20px,3vw,40px);align-items:center}
 @media (max-width:760px){.split{grid-template-columns:1fr}}
@@ -80,5 +88,29 @@ section > p + p{margin-top:12px}
 .js .hero [data-rv]{transform:scale(1.04)}
 @media (prefers-reduced-motion:reduce){
   .js [data-rv]{opacity:1;transform:none;filter:none;transition:none}
-  .lift:hover,.persona:hover,.meta .row:hover dt,.meta .row:hover dd{transform:none}
+  .shot > img,.persona > img,.meta .row:hover dt,.meta .row:hover dd{transform:none!important}
 }
+
+/* Discount Discovery hero: her frame, with the headline set as live text inside it */
+.hero.dda{height:auto;background:#4a74ad}
+.dda .frame{position:relative;width:100%;aspect-ratio:2421/749;container-type:inline-size;overflow:hidden;transform-origin:50% 100%}
+.dda .frame > img{position:absolute;inset:0;width:100%;height:100%}
+.dda .copy{position:absolute;left:12.62%;top:45.1%;right:8%;color:#fff;transition:transform .9s var(--ease)}
+.dda .welcome{font-size:1.34cqw;font-weight:400;line-height:1.2;letter-spacing:0;margin:0}
+.dda .big{font-size:4.76cqw;font-weight:400;line-height:1.25;letter-spacing:.006em;margin:1.63cqw 0 0;padding:0}
+.dda .ln{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.dda .wd{display:inline-block}
+.dda .create{font-style:italic;color:#1b1b1b;white-space:nowrap}
+.dda .create .lt{display:inline-block;transition:transform .5s var(--ease),opacity .2s}
+.dda .create:hover .lt{transform:translateY(-.12em)}
+.dda .create .lt:nth-child(2){transition-delay:.03s}.dda .create .lt:nth-child(3){transition-delay:.06s}.dda .create .lt:nth-child(4){transition-delay:.09s}
+.dda .create .lt:nth-child(5){transition-delay:.12s}.dda .create .lt:nth-child(6){transition-delay:.15s}.dda .create .lt:nth-child(7){transition-delay:.18s}
+.dda .caret{display:inline-block;width:.06em;height:.82em;background:#1b1b1b;margin-left:.05em;vertical-align:-.04em;opacity:0}
+.dda + .sheet{margin-top:calc(-1 * min(14px,1vw))}
+.js .dda .welcome{opacity:0;filter:blur(6px);transform:translateY(12px);transition:opacity .9s var(--ease) .15s,filter .9s var(--ease) .15s,transform 1s var(--ease) .15s}
+.js .dda .wd{transform:translateY(110%);transition:transform 1.1s var(--ease) var(--d,0ms)}
+.js .dda .create .lt{opacity:0}
+.js .dda.on .welcome{opacity:1;filter:none;transform:none}
+.js .dda.on .wd{transform:none}
+.js .dda .caret.blink{animation:caret .9s steps(1) 4 both}
+@keyframes caret{0%{opacity:1}50%{opacity:0}100%{opacity:0}}
