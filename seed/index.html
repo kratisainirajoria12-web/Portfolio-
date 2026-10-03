@@ -254,8 +254,8 @@ body.case-open{overflow:hidden}
 <section class="panel" id="work" data-a="1122" data-b="1245">
   <p class="eyebrow">05 · Bloom · Selected work</p>
   <div class="work">
-    <a class="card" href="work/healthfab.webp" data-case="img" data-title="Healthfab"><span class="n">01</span><h3>Healthfab <i aria-hidden="true">↗</i></h3><span class="meta">Rebranding Case Study · Brand Strategy &amp; Identity Design</span><span class="out">Same Product, New Story</span></a>
-    <a class="card" href="work/discount-discovery.webp" data-case="img" data-title="Discount Discovery App"><span class="n">02</span><h3>Discount Discovery App <i aria-hidden="true">↗</i></h3><span class="meta">Shopify App · Case Study</span><span class="out">Every Discount, One Tap Away</span></a>
+    <a class="card" href="work/healthfab.html" data-case="page" data-title="Healthfab"><span class="n">01</span><h3>Healthfab <i aria-hidden="true">↗</i></h3><span class="meta">Rebranding Case Study · Brand Strategy &amp; Identity Design</span><span class="out">Same Product, New Story</span></a>
+    <a class="card" href="work/discount-discovery.html" data-case="page" data-title="Discount Discovery App"><span class="n">02</span><h3>Discount Discovery App <i aria-hidden="true">↗</i></h3><span class="meta">Shopify App · Case Study</span><span class="out">Every Discount, One Tap Away</span></a>
     <a class="card" href="work/beauty-by-bie.html" data-case="page" data-title="Beauty by Bie"><span class="n">03</span><h3>Beauty by Bie <i aria-hidden="true">↗</i></h3><span class="meta">CRO Case Study · UX/UI Designer · CRO Strategy &amp; Redesign</span><span class="out">Designing for Better Conversions</span></a>
   </div>
 </section>
@@ -738,6 +738,6 @@ function open(a){back=a;title.textContent=a.dataset.title;view.textContent='';
   box.hidden=false;document.body.classList.add('case-open');close.focus();}
 function shut(){box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
 document.querySelectorAll('a.card[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
-close.addEventListener('click',shut);addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
+close.addEventListener('click',shut);addEventListener('message',e=>{if(e.data&&e.data.type==='close-case'&&!box.hidden)shut();});addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
 </script>
 
