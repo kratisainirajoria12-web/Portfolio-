@@ -781,44 +781,48 @@ close.addEventListener('click',shut);addEventListener('message',e=>{if(!e.data||
 </script>
 
 <script>
-/* ambience: a soft, slowly breathing pad with a little wind and the odd chime, made in the browser (no audio file).
-   It brightens as the plant grows and grows hushed underground; it dips while a case study is open. */
-window.__sound=(()=>{let ctx=null,master,lp,on=false,duck=1,timer=0,u=0;
-const notes=[[48,55,60,64,67],[45,52,57,60,64],[41,48,55,57,60],[43,50,55,59,62]],penta=[72,74,76,79,81,84];
+/* ambience: a quiet, warm piano-like lullaby over a soft pad, made in the browser (no audio file, no noise).
+   Notes are sparse and slow; scrolling adds a gentle note from the current chord, so moving through the story plays it.
+   Darker underground, a little brighter in bloom; it dips while a case study is open. */
+window.__sound=(()=>{let ctx=null,master,tone,on=false,duck=1,u=0,lastNote=0,ci=0,chordT=0,idleT=0;
 const hz=m=>440*Math.pow(2,(m-69)/12);
+// Cmaj9 → Am9 → Fmaj9 → G6/9: each with a soft bass, pad tones and the notes the melody may use
+const CH=[{b:36,pad:[52,55,59,62],mel:[64,67,71,72,74,76,79]},{b:33,pad:[52,55,57,60],mel:[64,67,69,72,74,76,79]},
+          {b:29,pad:[53,57,60,64],mel:[65,67,69,72,76,77,79]},{b:31,pad:[50,55,57,59],mel:[62,64,67,69,71,74,76]}];
 function build(){ctx=new (window.AudioContext||window.webkitAudioContext)();
-  master=ctx.createGain();master.gain.value=0;lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.Q.value=.3;
-  const rev=ctx.createConvolver(),len=ctx.sampleRate*3.2,ir=ctx.createBuffer(2,len,ctx.sampleRate);
-  for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
-  rev.buffer=ir;const wet=ctx.createGain();wet.gain.value=.55;
-  lp.connect(master);lp.connect(rev);rev.connect(wet);wet.connect(master);master.connect(ctx.destination);
-  // wind: filtered noise, slowly swelling
-  const nb=ctx.createBuffer(1,ctx.sampleRate*4,ctx.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
-  const ns=ctx.createBufferSource();ns.buffer=nb;ns.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=500;bp.Q.value=.6;
-  const ng=ctx.createGain();ng.gain.value=.018;const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=.07;lg.gain.value=.014;lfo.connect(lg);lg.connect(ng.gain);
-  ns.connect(bp);bp.connect(ng);ng.connect(lp);ns.start();lfo.start();
-  chord(0);}
-let ci=0;
-function chord(i){const t=ctx.currentTime;notes[i%notes.length].forEach((m,k)=>{
-  [-4,4].forEach(dt=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=k<2?'sine':'triangle';o.frequency.value=hz(m);o.detune.value=dt;
-    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.022/(1+k*.35),t+4);g.gain.setValueAtTime(.022/(1+k*.35),t+9);g.gain.linearRampToValueAtTime(0,t+14);
-    o.connect(g);g.connect(lp);o.start(t);o.stop(t+14.2);});});
-  timer=setTimeout(()=>chord(i+1),10000);
-  if(Math.random()<.85)setTimeout(chime,1500+Math.random()*5000);}
-function chime(){if(!on||!ctx)return;const t=ctx.currentTime,m=penta[Math.random()*penta.length|0],o=ctx.createOscillator(),g=ctx.createGain();
-  o.type='sine';o.frequency.value=hz(m);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+.02);g.gain.exponentialRampToValueAtTime(.0005,t+3.5);
-  o.connect(g);g.connect(lp);o.start(t);o.stop(t+3.6);}
-function level(){if(!ctx)return;const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(on?.9*duck:0,t,on?1.2:.35);}
+  master=ctx.createGain();master.gain.value=0;
+  tone=ctx.createBiquadFilter();tone.type='lowpass';tone.frequency.value=2200;tone.Q.value=.2;
+  // soft, smooth room: a short decaying IR made from filtered impulses (no hiss)
+  const rev=ctx.createConvolver(),len=ctx.sampleRate*2.6|0,ir=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let c=0;c<2;c++){const d=ir.getChannelData(c);let s=0;for(let i=0;i<len;i++){s=s*.6+(Math.random()*2-1)*.4;d[i]=s*Math.pow(1-i/len,3.2)*.6;}}
+  rev.buffer=ir;const wet=ctx.createGain();wet.gain.value=.32;const dry=ctx.createGain();dry.gain.value=.8;
+  const comp=ctx.createDynamicsCompressor();comp.threshold.value=-22;comp.ratio.value=3;comp.attack.value=.02;comp.release.value=.4;
+  tone.connect(dry);tone.connect(rev);rev.connect(wet);dry.connect(comp);wet.connect(comp);comp.connect(master);master.connect(ctx.destination);
+  next();}
+// a felt-piano-ish note: fundamental + soft octave, gentle attack, long natural decay
+function note(m,vel,at){const t=at||ctx.currentTime,f=hz(m),g=ctx.createGain(),o1=ctx.createOscillator(),o2=ctx.createOscillator(),g2=ctx.createGain();
+  o1.type='sine';o1.frequency.value=f;o2.type='sine';o2.frequency.value=f*2;g2.gain.value=.18;
+  const dur=3.2+Math.random()*1.2;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(vel,t+.025);g.gain.exponentialRampToValueAtTime(vel*.35,t+.6);g.gain.exponentialRampToValueAtTime(.0001,t+dur);
+  o1.connect(g);o2.connect(g2);g2.connect(g);g.connect(tone);o1.start(t);o2.start(t);o1.stop(t+dur+.05);o2.stop(t+dur+.05);}
+function pad(c,t,len){c.pad.concat([c.b+12]).forEach((m,k)=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type='sine';o.frequency.value=hz(m);o.detune.value=(k%2?3:-3);
+  const v=k===c.pad.length?.022:.009;g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(v,t+3);g.gain.setValueAtTime(v,t+len-2.5);g.gain.linearRampToValueAtTime(0,t+len+1.5);
+  o.connect(g);g.connect(tone);o.start(t);o.stop(t+len+1.6);});}
+// every 8 s a new chord; a low note opens it and the melody wanders slowly, leaving space between notes
+function next(){const t=ctx.currentTime+.05,c=CH[ci%CH.length];chordT=t;pad(c,t,8);note(c.b+12,.05,t);
+  let at=t+1.2;for(let k=0;k<3;k++){if(Math.random()<.7)note(c.mel[Math.random()*c.mel.length|0],.032+Math.random()*.012,at);at+=1.8+Math.random()*1.4;}
+  ci++;idleT=setTimeout(next,8000);}
+function level(){if(!ctx)return;const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(on?2.2*duck:0,t,on?1.5:.35);}
 return{
   start(){if(!ctx)build();ctx.resume&&ctx.resume();on=true;level();},
   set(v){if(v)this.start();else{on=false;level();}try{localStorage.setItem('krati-sound',v?'1':'0');}catch(e){}document.dispatchEvent(new CustomEvent('soundchange',{detail:v}));},
   get on(){return on;},
   duck(d){duck=d?.25:1;level();},
-  // story position: darker underground, brightest in full bloom
-  u(v){if(!ctx||Math.abs(v-u)<2)return;u=v;const under=v>190&&v<420?1:0,bloom=Math.max(0,Math.min(1,(v-700)/500));
-    lp.frequency.setTargetAtTime(under?650:1100+bloom*1500,ctx.currentTime,1.5);}
+  u(v){if(!ctx)return;const d=Math.abs(v-u);
+    // scrolling plays the story: a soft note from the current chord, at most every ~0.45 s
+    if(on&&d>.6&&ctx.currentTime-lastNote>.45){lastNote=ctx.currentTime;const c=CH[(ci+CH.length-1)%CH.length];note(c.mel[(Math.random()*c.mel.length)|0],.026,0);}
+    if(d>2){const under=v>190&&v<420,bloom=Math.max(0,Math.min(1,(v-700)/500));tone.frequency.setTargetAtTime(under?900:1700+bloom*1300,ctx.currentTime,1.2);}
+    u=v;}
 };})();
-// leaving the tab: go quiet
 document.addEventListener('visibilitychange',()=>{const s=window.__sound;if(!s)return;if(document.hidden){if(s.on){s._was=true;s.set(false);}}else if(s._was){s._was=false;s.set(true);}});
 </script>
 <script>
