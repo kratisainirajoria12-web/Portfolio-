@@ -15,6 +15,7 @@
   if(self&&up)up.postMessage({type:'case-title',title:self.name},'*');
 
   const css=`
+  .more,.more *{box-sizing:border-box}
   .more{position:relative;z-index:2;margin:0;font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:#141414;background:#fff;
     padding-block:clamp(56px,7vw,104px) clamp(64px,8vw,120px);border-top:1px solid #ececec}
   .more .in{width:min(1120px,100%);margin:0 auto;padding-inline:16px}
@@ -39,10 +40,11 @@
   .more a.card:hover .th img,.more a.card:focus-visible .th img{transform:scale(1.04)}
   .more a.card:hover h3 i,.more a.card:focus-visible h3 i{transform:translate(3px,-3px)}
   .more a.card:focus-visible .th{outline:2px solid #141414;outline-offset:4px}
-  .more .card{opacity:0;transform:translateY(30px);filter:blur(6px);transition:opacity .9s cubic-bezier(.22,1,.36,1),transform 1s cubic-bezier(.22,1,.36,1),filter .9s cubic-bezier(.22,1,.36,1)}
+  /* cards are always visible; the entrance only plays where the browser can watch them come into view */
+  .more .card.pre{opacity:0;transform:translateY(30px)}
+  .more .card{transition:opacity .9s cubic-bezier(.22,1,.36,1),transform 1s cubic-bezier(.22,1,.36,1)}
   .more .card:nth-child(2){transition-delay:.12s}
-  .more .card.on{opacity:1;transform:none;filter:none}
-  @media (prefers-reduced-motion:reduce){.more .card{opacity:1;transform:none;filter:none;transition:none}.more a.card:hover .th,.more a.card:hover .th img{transform:none}}`;
+  @media (prefers-reduced-motion:reduce){.more .card{transition:none}.more a.card:hover .th,.more a.card:hover .th img{transform:none}}`;
 
   function build(){
     if(document.querySelector('.more'))return true;
@@ -51,13 +53,17 @@
     const sec=document.createElement('section');sec.className='more';sec.setAttribute('aria-labelledby','moreTitle');
     const others=P.filter(p=>p.id!==me);
     sec.innerHTML=`<div class="in"><div class="top"><h2 id="moreTitle">More projects</h2><a class="all" href="${BASE}../index.html"${TGT} data-home>Back to all work</a></div><div class="grid">${
-      others.map(p=>`<a class="card" href="${BASE}${p.href}"${TGT}><span class="th"><img src="${BASE}thumbs/${p.id}.webp" alt="" loading="lazy" width="960" height="540"></span><span class="tx"><span class="n">${p.n}</span><h3>${p.name} <i aria-hidden="true">↗</i></h3><span class="mm">${p.meta.replace(/&/g,'&amp;')}</span><span class="ln">${p.line}</span></span></a>`).join('')}</div></div>`;
+      others.map(p=>`<a class="card" href="${BASE}${p.href}"${TGT}><span class="th"><img src="${BASE}thumbs/${p.id}.webp" alt="" width="960" height="540"></span><span class="tx"><span class="n">${p.n}</span><h3>${p.name} <i aria-hidden="true">↗</i></h3><span class="mm">${p.meta.replace(/&/g,'&amp;')}</span><span class="ln">${p.line}</span></span></a>`).join('')}</div></div>`;
     host.after(sec);
     // in the viewer, "Back to all work" closes it; on its own it goes to the portfolio
     sec.querySelector('[data-home]').addEventListener('click',e=>{if(up){e.preventDefault();up.postMessage({type:'close-case'},'*');}});
     const cards=[...sec.querySelectorAll('.card')];
-    if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target);}}),{threshold:.15});cards.forEach(c=>io.observe(c));}
-    else cards.forEach(c=>c.classList.add('on'));
+    try{if('IntersectionObserver' in window&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sec.getBoundingClientRect().top>innerHeight){
+      cards.forEach(c=>c.classList.add('pre'));
+      const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.remove('pre');io.unobserve(x.target);}}),{threshold:.1});
+      cards.forEach(c=>io.observe(c));
+      setTimeout(()=>cards.forEach(c=>c.classList.remove('pre')),8000);   // never leave them hidden
+    }}catch(e){cards.forEach(c=>c.classList.remove('pre'));}
     return true;
   }
   if(!build()){const t=setInterval(()=>{if(build())clearInterval(t);},60);setTimeout(()=>clearInterval(t),15000);}
