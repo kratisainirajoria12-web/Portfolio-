@@ -1,7 +1,7 @@
 <title>Krati — The Seed</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,500;0,600;1,500;1,600&family=Figtree:wght@400;500;600&family=Plus+Jakarta+Sans:wght@500;600&display=swap">
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
 <style>
 /* Layout: one pinned stage; scroll drives time. Intro world (Krati planting) → dive into soil → 3D growth → back to the intro world. */
@@ -12,7 +12,7 @@
   --petal:#f2ae12; --amber:#9a5a00;
   --ink:#1d1a16; --ink-soft:#4a4239; --paper:#fffaf1;
   --light-ink:#fbf1e2; --light-soft:#d9c6ad;
-  --f-display:"Sora", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --f-display:"Inter Tight", "Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-body:"Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
   --f-mono:"Plus Jakarta Sans", system-ui, -apple-system, "Segoe UI", sans-serif;   /* labels and subheadings */
   color-scheme:light;
@@ -46,7 +46,7 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
 /* ---------- chrome ---------- */
 header{position:fixed;left:0;right:0;top:0;z-index:10;display:flex;justify-content:space-between;align-items:center;
   padding:calc(18px + env(safe-area-inset-top,0px)) clamp(16px,4vw,48px) 0}
-.logo{font-family:var(--f-display);font-size:22px;letter-spacing:.01em;color:var(--c-ink,var(--ink));text-decoration:none;background:none;border:0;cursor:pointer;padding:0}
+.logo{font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.02em;color:var(--c-ink,var(--ink));text-decoration:none;background:none;border:0;cursor:pointer;padding:0}
 nav{display:flex;gap:clamp(14px,2.4vw,32px)}
 nav button{font:500 14px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink,var(--ink));
   background:none;border:0;padding:8px 0;cursor:pointer;border-bottom:1px solid transparent}
@@ -71,7 +71,7 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
   right:clamp(16px,7vw,110px);top:50%;width:min(420px,40vw);transform:translateY(-50%)}
 .panel.live:not(.out){pointer-events:auto}
 .eyebrow{font:600 11px/1.4 var(--f-mono);letter-spacing:.16em;text-transform:uppercase;color:var(--c-soft,var(--ink-soft));margin:0 0 14px}
-.panel h2{font:400 clamp(30px,3.4vw,46px)/1.12 var(--f-display);letter-spacing:-.02em;margin:0 0 16px;text-wrap:balance}
+.panel h2{font:500 clamp(30px,3.4vw,46px)/1.1 var(--f-display);letter-spacing:-.025em;margin:0 0 16px;text-wrap:balance}
 .panel p{margin:0 0 12px;max-width:40ch;color:var(--c-ink,var(--ink))}
 .ph{color:var(--c-soft,var(--ink-soft));font-style:italic}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
@@ -86,20 +86,21 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .tl li{position:relative;padding-left:30px;display:grid;gap:3px}
 .tl li::before{content:"";position:absolute;left:0;top:3px;width:12px;height:12px;border-radius:50%;background:#ffcf7a;box-shadow:0 0 12px 3px rgba(255,190,100,.55)}
 .tl .yr{font:600 12px/1.2 var(--f-mono);letter-spacing:.12em;font-variant-numeric:tabular-nums;color:var(--c-soft,var(--ink-soft))}
-.tl h3{font:400 clamp(19px,1.8vw,24px)/1.25 var(--f-display);letter-spacing:-.01em;margin:2px 0 0;text-wrap:balance}
+.tl h3{font:500 clamp(19px,1.8vw,24px)/1.25 var(--f-display);letter-spacing:-.01em;margin:2px 0 0;text-wrap:balance}
 .tl p{margin:0!important}
 .tl .where{font-size:15px}
 .tl .lesson{font-size:14px;font-style:italic;color:var(--c-soft,var(--ink-soft))}
 
 #hello{left:0;right:0;margin:0 auto;width:min(1100px,90vw);top:7vh;transform:none;text-align:center}
-#hello h1{font-size:clamp(40px,5.4vw,84px)!important}
+#hello h1{font-size:clamp(34px,4.6vw,70px)!important}
 #hello .hint{justify-content:center}
 .panel.light{--c-ink:var(--light-ink);--c-soft:var(--light-soft);--c-glow:0 0 22px rgba(10,6,3,.85)}
 .panel.right-d{right:clamp(16px,7vw,110px);left:auto}
 .panel.top-d{top:17vh}
 .panel.left-d{left:clamp(16px,6vw,96px);right:auto}
-#hello h1{font:400 clamp(40px,6.2vw,92px)/1.08 var(--f-display);margin:0;letter-spacing:-.03em;text-wrap:balance}
-#hello h1 em{font-style:normal;color:#fff;text-shadow:0 1px 16px rgba(20,12,6,.55),0 0 2px rgba(20,12,6,.35)}
+#hello h1{font:600 clamp(34px,4.6vw,70px)/1.04 var(--f-display);margin:0;letter-spacing:-.035em;text-wrap:balance}
+#hello h1 .l2{color:#fff;text-shadow:0 1px 16px rgba(20,12,6,.55),0 0 2px rgba(20,12,6,.35)}
+#hello h1 em{font-style:italic;font-weight:500;letter-spacing:-.025em}
 /* the intro writes itself in white, never gold */
 @media (prefers-reduced-motion:no-preference){#hello.in .ch{animation-name:chInW}}
 @keyframes chInW{0%{opacity:0;transform:translateY(.42em) scale(.97);filter:blur(10px)}
@@ -113,7 +114,7 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .card{text-shadow:none;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:16px 18px;border-radius:14px;background:rgba(255,250,241,.82);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--ink);border:1px solid rgba(154,90,0,.18)}
 .card .n{font:500 11px/1.6 var(--f-mono);color:var(--amber);grid-row:span 3}
-.card h3{font:400 20px/1.25 var(--f-display);letter-spacing:-.01em;margin:0}
+.card h3{font:500 20px/1.25 var(--f-display);letter-spacing:-.01em;margin:0}
 .card .meta{font-size:13px;color:var(--ink-soft)}
 .card .out{font-size:14px}
 a.card{text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
@@ -147,7 +148,7 @@ body.case-open{overflow:hidden}
   .panel.left-d{left:16px;right:16px}
   .panel{left:16px;right:16px;width:auto;top:auto;bottom:calc(92px + env(safe-area-inset-bottom,0px));transform:none}
   #hello,.panel.top-m{top:calc(78px + env(safe-area-inset-top,0px));bottom:auto;left:16px;right:16px;width:auto;max-width:none}
-  #hello h1{font-size:40px}
+  #hello h1{font-size:34px}
   .panel h2{font-size:30px}
   .panel p{font-size:15px}
   .card{text-shadow:none;padding:12px 14px}.card h3{font-size:17px}.card .out{display:none}
@@ -216,7 +217,7 @@ body.case-open{overflow:hidden}
 
 <!-- panels: data-a/data-b = scroll window where each is readable -->
 <section class="panel" id="hello" data-a="0" data-b="40">
-  <h1>Hi, I am Krati Saini,<br><em>a product designer.</em></h1>
+  <h1>Hi, I am Krati Saini,<br><span class="l2">a <em>product designer.</em></span></h1>
   <p class="tagline">I used to design products you could hold, now I design products you could scroll.</p>
   <div class="hint"><i></i>Scroll to plant the seed</div>
 </section>
