@@ -76,8 +76,22 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .ph{color:var(--c-soft,var(--ink-soft));font-style:italic}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
 .chip{font:500 13px/1 var(--f-body);padding:9px 12px;border-radius:999px;border:1px solid currentColor}
+.panel .chips{margin-top:0}
+.lbl{font:500 11px/1.4 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--c-soft,var(--ink-soft));margin:18px 0 10px!important}
+.tools{font-size:14px;line-height:1.7}
+.tagline{font:400 clamp(16px,1.6vw,20px)/1.45 var(--f-body);max-width:none!important;margin:16px 0 0!important}
+/* education: a root line running down through each degree */
+.tl{list-style:none;margin:4px 0 0;padding:0;display:grid;gap:22px;position:relative}
+.tl::before{content:"";position:absolute;left:5px;top:8px;bottom:-30px;width:1.5px;background:linear-gradient(var(--c-soft,var(--ink-soft)),transparent)}
+.tl li{position:relative;padding-left:30px;display:grid;gap:3px}
+.tl li::before{content:"";position:absolute;left:0;top:3px;width:12px;height:12px;border-radius:50%;background:#ffcf7a;box-shadow:0 0 12px 3px rgba(255,190,100,.55)}
+.tl .yr{font:500 12px/1.2 var(--f-mono);letter-spacing:.08em;color:var(--c-soft,var(--ink-soft))}
+.tl h3{font:400 clamp(19px,1.8vw,24px)/1.2 var(--f-display);margin:2px 0 0;text-wrap:balance}
+.tl p{margin:0!important}
+.tl .where{font-size:15px}
+.tl .lesson{font-size:14px;font-style:italic;color:var(--c-soft,var(--ink-soft))}
 
-#hello{left:0;right:0;margin:0 auto;width:min(1100px,90vw);top:11vh;transform:none;text-align:center}
+#hello{left:0;right:0;margin:0 auto;width:min(1100px,90vw);top:7vh;transform:none;text-align:center}
 #hello h1{font-size:clamp(40px,5.4vw,84px)!important}
 #hello .hint{justify-content:center}
 .panel.light{--c-ink:var(--light-ink);--c-soft:var(--light-soft);--c-glow:0 0 22px rgba(10,6,3,.85)}
@@ -85,7 +99,12 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .panel.top-d{top:17vh}
 .panel.left-d{left:clamp(16px,6vw,96px);right:auto}
 #hello h1{font:400 clamp(40px,6.2vw,92px)/1.02 var(--f-display);margin:0;letter-spacing:-.01em;text-wrap:balance}
-#hello h1 em{font-style:normal;color:var(--amber)}
+#hello h1 em{font-style:normal;color:#fff;text-shadow:0 1px 16px rgba(20,12,6,.55),0 0 2px rgba(20,12,6,.35)}
+/* the intro writes itself in white, never gold */
+@media (prefers-reduced-motion:no-preference){#hello.in .ch{animation-name:chInW}}
+@keyframes chInW{0%{opacity:0;transform:translateY(.42em) scale(.97);filter:blur(10px)}
+  38%{opacity:1;filter:blur(1.5px);color:#fff;text-shadow:0 0 18px rgba(255,255,255,.9),0 0 4px rgba(255,255,255,.85)}
+  100%{opacity:1;transform:none;filter:blur(0)}}
 .hint{margin-top:22px;font:500 12px/1 var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);display:flex;align-items:center;gap:10px}
 .hint i{display:block;width:1px;height:28px;background:currentColor;animation:drip 1.8s ease-in-out infinite;transform-origin:top}
 @keyframes drip{0%{transform:scaleY(0)}50%{transform:scaleY(1)}100%{transform:scaleY(1);opacity:0}}
@@ -124,6 +143,9 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
   .panel.top-m{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;text-shadow:var(--c-glow,0 0 18px rgba(255,248,235,.9))}
   #work{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0}
   nav{gap:14px} nav button{font-size:12px}
+  .tl{gap:14px}.tl h3{font-size:18px}.tl .where{font-size:14px}.tl .lesson{font-size:13px}
+  .chip{font-size:12px;padding:7px 10px}.chips{gap:6px}.lbl{margin:12px 0 8px!important}.tools{font-size:13px}
+  .tagline{font-size:16px}
   .hud .day{font-size:20px}
 }
 @media (prefers-reduced-motion:reduce){.hint i{animation:none}}
@@ -180,7 +202,8 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 
 <!-- panels: data-a/data-b = scroll window where each is readable -->
 <section class="panel" id="hello" data-a="0" data-b="40">
-  <h1>Hi, I am Krati,<br><em>a product designer.</em></h1>
+  <h1>Hi, I am Krati Saini,<br><em>a product designer.</em></h1>
+  <p class="tagline">I started out designing bags you could hold. Now I design apps you scroll through. But I'm still wondering why people do what they do.</p>
   <div class="hint"><i></i>Scroll to plant the seed</div>
 </section>
 
@@ -191,25 +214,27 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 </section>
 
 <section class="panel left-d" id="about" data-a="290" data-b="470" data-ink="light">
-  <p class="eyebrow">02 · Roots · 2016 – 2019</p>
-  <h2>Where it began</h2>
-  <p>The years nobody sees: learning to sketch, to ask better questions, and to test ideas before trusting them.</p>
-  <p class="ph">[Placeholder: your design school, course, or the moment you found design.]</p>
+  <p class="eyebrow">02 · Roots · Education</p>
+  <h2>Where my roots begin</h2>
+  <ol class="tl">
+    <li><span class="yr">2023</span><h3>Bachelor of Design, Leather Design</h3><p class="where">National Institute of Fashion Technology (NIFT)</p><p class="lesson">Where I learned to design for the people who use things.</p></li>
+    <li><span class="yr">2018</span><h3>Bachelor of Science, Biology</h3><p class="where">University of Rajasthan</p><p class="lesson">Where I learned how living things grow.</p></li>
+  </ol>
 </section>
 
 <section class="panel" data-a="640" data-b="760">
-  <p class="eyebrow">03 · Sprout · 2019</p>
-  <h2>First light</h2>
-  <p>My first role, and the first product I shipped to real people.</p>
-  <p class="ph">[Placeholder: company, role, and what it taught you.]</p>
+  <p class="eyebrow">03 · Sprout · Experience</p>
+  <h2>3 years of growing products and brands</h2>
+  <p>I design websites, apps and Shopify stores for D2C brands and SaaS teams, from the first round of research to the shipped screen.</p>
 </section>
 
 <section class="panel" data-a="820" data-b="1050">
-  <p class="eyebrow">04 · Growth · 2020 – 2023</p>
+  <p class="eyebrow">04 · Growth · Skills &amp; tools</p>
   <h2>Growing in every direction</h2>
-  <p>Each leaf is a skill I picked up along the way.</p>
-  <div class="chips"><span class="chip">Product thinking</span><span class="chip">User research</span><span class="chip">Interaction design</span><span class="chip">Design systems</span><span class="chip">Prototyping</span><span class="chip">Workshops</span></div>
-  <p class="ph" style="margin-top:14px">[Placeholder: swap in your real skills.]</p>
+  <p class="lbl">What I do</p>
+  <div class="chips"><span class="chip">Product design</span><span class="chip">UX research</span><span class="chip">UI design</span><span class="chip">Interaction design</span><span class="chip">Design systems</span><span class="chip">Wireframing &amp; prototyping</span><span class="chip">Usability testing</span><span class="chip">E-commerce UX &amp; CRO</span><span class="chip">Branding</span></div>
+  <p class="lbl">Tools</p>
+  <p class="tools">Figma · FigJam · Adobe Creative Suite · Framer · Webflow · Shopify · Google Analytics</p>
 </section>
 
 <section class="panel" id="work" data-a="1122" data-b="1245">
@@ -222,9 +247,9 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 </section>
 
 <section class="panel" id="contact" data-a="1262" data-b="1405">
-  <p class="eyebrow">05 · Bloom · Say hello</p>
-  <h2>What shall we grow together?</h2>
-  <p>I'm open to product design roles and collaborations.</p>
+  <p class="eyebrow">06 · Bloom · Say hello</p>
+  <h2>Let's build something together.</h2>
+  <p>I'm open to product design roles, freelance projects and collaborations.</p>
   <div class="links"><span>[your@email.com]</span><span>LinkedIn</span><span>Behance</span><span>Resume</span></div>
   <button class="again" data-go="0">↺ Plant it again</button>
 </section>
