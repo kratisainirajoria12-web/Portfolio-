@@ -116,6 +116,20 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .card h3{font:400 20px/1.2 var(--f-display);margin:0}
 .card .meta{font-size:13px;color:var(--ink-soft)}
 .card .out{font-size:14px}
+a.card{text-decoration:none;cursor:pointer;transition:background .2s,border-color .2s,transform .2s}
+a.card:hover,a.card:focus-visible{background:rgba(255,250,241,.95);border-color:rgba(154,90,0,.45);transform:translateY(-2px);outline:none}
+.card h3 i{font-style:normal;font-size:.75em;color:var(--amber)}
+/* case study viewer: her case studies open over the story, exactly as she made them */
+#case{position:fixed;inset:0;z-index:40;display:grid;grid-template-rows:auto 1fr;background:#0d0a07;color:var(--light-ink)}
+#case .bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:calc(12px + env(safe-area-inset-top,0px)) clamp(16px,4vw,48px) 12px;border-bottom:1px solid rgba(251,241,226,.12)}
+#case .bar h2{font:400 clamp(18px,2vw,24px)/1.2 var(--f-display);margin:0}
+#case .close{font:600 14px/1 var(--f-body);padding:12px 18px;border-radius:999px;border:1px solid rgba(251,241,226,.35);background:transparent;color:var(--light-ink);cursor:pointer}
+#case .close:hover,#case .close:focus-visible{background:var(--light-ink);color:var(--ink);outline:none}
+#case .view{overflow:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+#case .view img{display:block;width:min(1200px,100%);height:auto;margin:0 auto}
+#case .view iframe{display:block;width:100%;height:100%;border:0;background:#fff}
+body.case-open{overflow:hidden}
+#case[hidden]{display:none}
 
 #contact h2{font-size:clamp(34px,4.2vw,58px)}
 .links{display:flex;flex-wrap:wrap;gap:10px 18px;margin:18px 0 22px;font-size:15px}
@@ -203,7 +217,7 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 <!-- panels: data-a/data-b = scroll window where each is readable -->
 <section class="panel" id="hello" data-a="0" data-b="40">
   <h1>Hi, I am Krati Saini,<br><em>a product designer.</em></h1>
-  <p class="tagline">I designed products you could hold to now products you could scroll.</p>
+  <p class="tagline">I used to design products you could hold, now I design products you could scroll.</p>
   <div class="hint"><i></i>Scroll to plant the seed</div>
 </section>
 
@@ -240,9 +254,9 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 <section class="panel" id="work" data-a="1122" data-b="1245">
   <p class="eyebrow">05 · Bloom · Selected work</p>
   <div class="work">
-    <article class="card"><span class="n">01</span><h3>[Project one]</h3><span class="meta">Product design · 2024</span><span class="out">One line on the outcome, e.g. onboarding drop-off down 30%.</span></article>
-    <article class="card"><span class="n">02</span><h3>[Project two]</h3><span class="meta">UX research · 2023</span><span class="out">One line on the outcome.</span></article>
-    <article class="card"><span class="n">03</span><h3>[Project three]</h3><span class="meta">Design system · 2022</span><span class="out">One line on the outcome.</span></article>
+    <a class="card" href="work/healthfab.webp" data-case="img" data-title="Healthfab"><span class="n">01</span><h3>Healthfab <i aria-hidden="true">↗</i></h3><span class="meta">Rebranding Case Study · Brand Strategy &amp; Identity Design</span><span class="out">Same Product, New Story</span></a>
+    <a class="card" href="work/discount-discovery.webp" data-case="img" data-title="Discount Discovery App"><span class="n">02</span><h3>Discount Discovery App <i aria-hidden="true">↗</i></h3><span class="meta">Shopify App · Case Study</span><span class="out">Every Discount, One Tap Away</span></a>
+    <a class="card" href="work/beauty-by-bie.html" data-case="page" data-title="Beauty by Bie"><span class="n">03</span><h3>Beauty by Bie <i aria-hidden="true">↗</i></h3><span class="meta">CRO Case Study · UX/UI Designer · CRO Strategy &amp; Redesign</span><span class="out">Designing for Better Conversions</span></a>
   </div>
 </section>
 
@@ -256,6 +270,7 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 
 <div id="iris"></div><div id="flash"></div><div id="dawn"></div><canvas id="pollen" aria-hidden="true"></canvas><div id="dip" aria-hidden="true"></div><div id="scrim"></div><div id="vig"></div><div id="grain"></div>
 <div id="track"></div>
+<div id="case" role="dialog" aria-modal="true" aria-labelledby="caseTitle" hidden><div class="bar"><h2 id="caseTitle"></h2><button class="close" type="button">Close ✕</button></div><div class="view"></div></div>
 
 <script>
 /* ================= the seed head: 3D macro over the last zoom frame =================
@@ -714,3 +729,15 @@ function frame(now){
 requestAnimationFrame(frame);
 })();
 </script>
+<script>
+/* case studies: open her file in a viewer over the page; Close or Esc returns to the story where it was */
+(()=>{const box=document.getElementById('case'),view=box.querySelector('.view'),title=document.getElementById('caseTitle'),close=box.querySelector('.close');let back=null;
+function open(a){back=a;title.textContent=a.dataset.title;view.textContent='';
+  if(a.dataset.case==='page'){const f=document.createElement('iframe');f.src=a.getAttribute('href');f.title=a.dataset.title+' case study';view.appendChild(f);view.style.overflow='hidden';}
+  else{const im=document.createElement('img');im.src=a.getAttribute('href');im.alt=a.dataset.title+' case study';view.appendChild(im);view.style.overflow='auto';view.scrollTop=0;}
+  box.hidden=false;document.body.classList.add('case-open');close.focus();}
+function shut(){box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
+document.querySelectorAll('a.card[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
+close.addEventListener('click',shut);addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
+</script>
+
