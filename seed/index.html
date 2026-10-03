@@ -52,6 +52,27 @@ nav button,nav a{text-decoration:none;font:500 14px/1 var(--f-body);letter-spaci
   background:none;border:0;padding:8px 0;cursor:pointer;border-bottom:1px solid transparent}
 nav button:hover,nav button:focus-visible,nav a:hover,nav a:focus-visible{border-bottom-color:currentColor;outline:none}
 .logo:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+.hl{display:flex;align-items:center;gap:clamp(16px,2.4vw,28px)}
+.hl .hres{font:500 14px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink,var(--ink));text-decoration:none;padding:8px 0;border-bottom:1px solid transparent}
+.hl .hres:hover,.hl .hres:focus-visible{border-bottom-color:currentColor;outline:none}
+nav .snd .sv{display:inline-block;min-width:2.2em;text-align:left;opacity:.7}
+/* entry: choose sound before the story starts */
+#gate{position:fixed;inset:0;z-index:30;display:grid;place-items:center;padding:24px 16px;text-align:center;color:var(--light-ink);
+  background:#050403 url(assets/seed.webp) center 42%/cover no-repeat;transition:opacity .9s ease,visibility 0s linear .9s}
+#gate::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(5,4,3,.62),rgba(5,4,3,.9))}
+#gate .in{position:relative;display:grid;gap:18px;justify-items:center;max-width:520px}
+#gate h2{font:600 clamp(30px,4vw,48px)/1.05 var(--f-display);letter-spacing:-.03em;margin:0}
+#gate p{margin:0;color:var(--light-soft);font-size:16px}
+#gate .row{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:10px}
+#gate button{font:600 15px/1 var(--f-body);padding:15px 22px;border-radius:999px;cursor:pointer;border:1px solid rgba(251,241,226,.5);background:transparent;color:var(--light-ink);
+  display:inline-flex;gap:10px;align-items:center;transition:background .3s,color .3s,transform .4s cubic-bezier(.22,1,.36,1)}
+#gate button.pri{background:var(--light-ink);color:#1d1a16;border-color:var(--light-ink)}
+#gate button:hover,#gate button:focus-visible{transform:translateY(-2px);outline:none}
+#gate button:focus-visible{box-shadow:0 0 0 3px rgba(251,241,226,.45)}
+#gate small{color:var(--light-soft);opacity:.75;font:500 11px/1.4 var(--f-mono);letter-spacing:.14em;text-transform:uppercase}
+#gate.gone{opacity:0;visibility:hidden;pointer-events:none}
+body.gated{overflow:hidden}
+@media (max-width:760px){.hl{gap:12px}.hl .hres{font-size:11px}nav{gap:10px!important}nav button,nav a{font-size:11px!important;letter-spacing:.04em}nav .snd .sl{display:none}nav .snd::before{content:"\266A";margin-right:2px}nav .snd .sv{min-width:0}}
 
 .hud{position:fixed;z-index:10;text-shadow:var(--c-glow,0 0 14px rgba(255,248,235,.95));left:clamp(16px,4vw,48px);bottom:calc(22px + env(safe-area-inset-bottom,0px));
   color:var(--c-ink,var(--ink));font-family:var(--f-mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;display:grid;gap:6px}
@@ -196,18 +217,24 @@ body.case-open{overflow:hidden}
 
 </style>
 
+<div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT"><div class="in">
+  <small>Krati Saini · Portfolio</small>
+  <h2 id="gateT">Every career starts with a seed.</h2>
+  <p>This story is best with sound. Headphones welcome.</p>
+  <div class="row"><button class="pri" type="button" data-sound="1"><span aria-hidden="true">♪</span> Enter with sound</button><button type="button" data-sound="0">Enter without sound</button></div>
+</div></div>
 <div id="loader"><p id="loadTxt">Planting… 0%</p></div>
 
 <div id="film" aria-hidden="true"><canvas id="storyCv"></canvas><canvas id="gl3"></canvas></div>
 <div id="dof" aria-hidden="true"></div><div id="tint" aria-hidden="true"></div>
 
 <header>
-  <button class="logo" data-go="0" aria-label="Back to start">Krati</button>
+  <div class="hl"><button class="logo" data-go="0" aria-label="Back to start">Krati</button><a class="hres" href="resume.pdf" target="_blank" rel="noopener">Resume</a></div>
   <nav aria-label="Jump to">
     <button data-go="330">About</button>
     <button data-go="1180">Work</button>
     <button data-go="1330">Contact</button>
-    <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="snd" type="button" aria-pressed="false" aria-label="Sound"><span class="sl">Sound</span> <span class="sv">off</span></button>
   </nav>
 </header>
 
@@ -735,6 +762,7 @@ function frame(now){
   pollenTick(vu,time,vel,dt);
   scrimEl.style.opacity=(u>660&&u<1430)?Math.min(ss(range(u,660,720)),1-ss(range(u,1400,1430))):0;
   hud(u);
+  if(window.__sound)window.__sound.u(vu);
   requestAnimationFrame(frame);
 }
 requestAnimationFrame(frame);
@@ -746,9 +774,61 @@ requestAnimationFrame(frame);
 function open(a){back=a;title.textContent=a.dataset.title;view.textContent='';
   if(a.dataset.case==='page'){const f=document.createElement('iframe');f.src=a.getAttribute('href');f.title=a.dataset.title+' case study';view.appendChild(f);view.style.overflow='hidden';}
   else{const im=document.createElement('img');im.src=a.getAttribute('href');im.alt=a.dataset.title+' case study';view.appendChild(im);view.style.overflow='auto';view.scrollTop=0;}
-  box.hidden=false;document.body.classList.add('case-open');close.focus();}
-function shut(){box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
+  box.hidden=false;document.body.classList.add('case-open');window.__sound&&window.__sound.duck(true);close.focus();}
+function shut(){window.__sound&&window.__sound.duck(false);box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
 document.querySelectorAll('a.card[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
 close.addEventListener('click',shut);addEventListener('message',e=>{if(!e.data||box.hidden)return;if(e.data.type==='close-case')shut();else if(e.data.type==='case-title'&&typeof e.data.title==='string')title.textContent=e.data.title;});addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
 </script>
 
+<script>
+/* ambience: a soft, slowly breathing pad with a little wind and the odd chime, made in the browser (no audio file).
+   It brightens as the plant grows and grows hushed underground; it dips while a case study is open. */
+window.__sound=(()=>{let ctx=null,master,lp,on=false,duck=1,timer=0,u=0;
+const notes=[[48,55,60,64,67],[45,52,57,60,64],[41,48,55,57,60],[43,50,55,59,62]],penta=[72,74,76,79,81,84];
+const hz=m=>440*Math.pow(2,(m-69)/12);
+function build(){ctx=new (window.AudioContext||window.webkitAudioContext)();
+  master=ctx.createGain();master.gain.value=0;lp=ctx.createBiquadFilter();lp.type='lowpass';lp.frequency.value=1400;lp.Q.value=.3;
+  const rev=ctx.createConvolver(),len=ctx.sampleRate*3.2,ir=ctx.createBuffer(2,len,ctx.sampleRate);
+  for(let c=0;c<2;c++){const d=ir.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6);}
+  rev.buffer=ir;const wet=ctx.createGain();wet.gain.value=.55;
+  lp.connect(master);lp.connect(rev);rev.connect(wet);wet.connect(master);master.connect(ctx.destination);
+  // wind: filtered noise, slowly swelling
+  const nb=ctx.createBuffer(1,ctx.sampleRate*4,ctx.sampleRate),nd=nb.getChannelData(0);for(let i=0;i<nd.length;i++)nd[i]=Math.random()*2-1;
+  const ns=ctx.createBufferSource();ns.buffer=nb;ns.loop=true;const bp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=500;bp.Q.value=.6;
+  const ng=ctx.createGain();ng.gain.value=.018;const lfo=ctx.createOscillator(),lg=ctx.createGain();lfo.frequency.value=.07;lg.gain.value=.014;lfo.connect(lg);lg.connect(ng.gain);
+  ns.connect(bp);bp.connect(ng);ng.connect(lp);ns.start();lfo.start();
+  chord(0);}
+let ci=0;
+function chord(i){const t=ctx.currentTime;notes[i%notes.length].forEach((m,k)=>{
+  [-4,4].forEach(dt=>{const o=ctx.createOscillator(),g=ctx.createGain();o.type=k<2?'sine':'triangle';o.frequency.value=hz(m);o.detune.value=dt;
+    g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.022/(1+k*.35),t+4);g.gain.setValueAtTime(.022/(1+k*.35),t+9);g.gain.linearRampToValueAtTime(0,t+14);
+    o.connect(g);g.connect(lp);o.start(t);o.stop(t+14.2);});});
+  timer=setTimeout(()=>chord(i+1),10000);
+  if(Math.random()<.85)setTimeout(chime,1500+Math.random()*5000);}
+function chime(){if(!on||!ctx)return;const t=ctx.currentTime,m=penta[Math.random()*penta.length|0],o=ctx.createOscillator(),g=ctx.createGain();
+  o.type='sine';o.frequency.value=hz(m);g.gain.setValueAtTime(0,t);g.gain.linearRampToValueAtTime(.03,t+.02);g.gain.exponentialRampToValueAtTime(.0005,t+3.5);
+  o.connect(g);g.connect(lp);o.start(t);o.stop(t+3.6);}
+function level(){if(!ctx)return;const t=ctx.currentTime;master.gain.cancelScheduledValues(t);master.gain.setTargetAtTime(on?.9*duck:0,t,on?1.2:.35);}
+return{
+  start(){if(!ctx)build();ctx.resume&&ctx.resume();on=true;level();},
+  set(v){if(v)this.start();else{on=false;level();}try{localStorage.setItem('krati-sound',v?'1':'0');}catch(e){}document.dispatchEvent(new CustomEvent('soundchange',{detail:v}));},
+  get on(){return on;},
+  duck(d){duck=d?.25:1;level();},
+  // story position: darker underground, brightest in full bloom
+  u(v){if(!ctx||Math.abs(v-u)<2)return;u=v;const under=v>190&&v<420?1:0,bloom=Math.max(0,Math.min(1,(v-700)/500));
+    lp.frequency.setTargetAtTime(under?650:1100+bloom*1500,ctx.currentTime,1.5);}
+};})();
+// leaving the tab: go quiet
+document.addEventListener('visibilitychange',()=>{const s=window.__sound;if(!s)return;if(document.hidden){if(s.on){s._was=true;s.set(false);}}else if(s._was){s._was=false;s.set(true);}});
+</script>
+<script>
+/* entry gate: the visitor picks sound on or off; the header switch changes it any time */
+(()=>{const g=document.getElementById('gate'),sb=document.querySelector('nav .snd'),S=window.__sound;
+document.body.classList.add('gated');
+const show=v=>{sb.setAttribute('aria-pressed',v?'true':'false');sb.querySelector('.sv').textContent=v?'on':'off';};
+document.addEventListener('soundchange',e=>show(e.detail));
+g.querySelectorAll('[data-sound]').forEach(b=>b.addEventListener('click',()=>{const v=b.dataset.sound==='1';S.set(v);show(v);
+  g.classList.add('gone');document.body.classList.remove('gated');setTimeout(()=>g.remove(),1000);}));
+sb.addEventListener('click',()=>S.set(!S.on));
+setTimeout(()=>{const b=g.querySelector('.pri');b&&b.focus({preventScroll:true});},50);})();
+</script>
