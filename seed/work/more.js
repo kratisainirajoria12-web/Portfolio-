@@ -5,10 +5,14 @@
     {id:'healthfab',n:'01',name:'Healthfab',meta:'Rebranding Case Study · Brand Strategy & Identity Design',line:'Same Product, New Story',href:'healthfab.html'},
     {id:'discount-discovery',n:'02',name:'Discount Discovery App',meta:'Shopify App · Case Study',line:'Every Discount, One Tap Away',href:'discount-discovery.html'},
     {id:'beauty-by-bie',n:'03',name:'Beauty by Bie',meta:'CRO Case Study · UX/UI Designer · CRO Strategy & Redesign',line:'Designing for Better Conversions',href:'beauty-by-bie.html'}];
-  const me=document.currentScript&&document.currentScript.dataset.current;
+  const me=(document.currentScript&&document.currentScript.dataset.current)||window.__moreCurrent;
+  // a bundled page (Beauty by Bie) runs inside a blob: frame of its own page: resolve paths and talk to the viewer from there
+  let H=window,BASE='';
+  try{if(location.protocol==='blob:'&&window.parent!==window){H=window.parent;BASE=new URL('.',H.location.href).href;}}catch(e){}
+  const up=H.parent!==H?H.parent:null, TGT=H===window?'':' target="_parent"';
   const self=P.find(p=>p.id===me);
   // inside the portfolio's viewer, keep its title in step with the page
-  if(self&&window.parent!==window)window.parent.postMessage({type:'case-title',title:self.name},'*');
+  if(self&&up)up.postMessage({type:'case-title',title:self.name},'*');
 
   const css=`
   .more{position:relative;z-index:2;margin:0;font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;color:#141414;background:#fff;
@@ -46,11 +50,11 @@
     const st=document.createElement('style');st.textContent=css;document.head.appendChild(st);
     const sec=document.createElement('section');sec.className='more';sec.setAttribute('aria-labelledby','moreTitle');
     const others=P.filter(p=>p.id!==me);
-    sec.innerHTML=`<div class="in"><div class="top"><h2 id="moreTitle">More projects</h2><a class="all" href="../index.html" data-home>Back to all work</a></div><div class="grid">${
-      others.map(p=>`<a class="card" href="${p.href}"><span class="th"><img src="thumbs/${p.id}.webp" alt="" loading="lazy" width="960" height="540"></span><span class="tx"><span class="n">${p.n}</span><h3>${p.name} <i aria-hidden="true">↗</i></h3><span class="mm">${p.meta.replace(/&/g,'&amp;')}</span><span class="ln">${p.line}</span></span></a>`).join('')}</div></div>`;
+    sec.innerHTML=`<div class="in"><div class="top"><h2 id="moreTitle">More projects</h2><a class="all" href="${BASE}../index.html"${TGT} data-home>Back to all work</a></div><div class="grid">${
+      others.map(p=>`<a class="card" href="${BASE}${p.href}"${TGT}><span class="th"><img src="${BASE}thumbs/${p.id}.webp" alt="" loading="lazy" width="960" height="540"></span><span class="tx"><span class="n">${p.n}</span><h3>${p.name} <i aria-hidden="true">↗</i></h3><span class="mm">${p.meta.replace(/&/g,'&amp;')}</span><span class="ln">${p.line}</span></span></a>`).join('')}</div></div>`;
     host.after(sec);
     // in the viewer, "Back to all work" closes it; on its own it goes to the portfolio
-    sec.querySelector('[data-home]').addEventListener('click',e=>{if(window.parent!==window){e.preventDefault();window.parent.postMessage({type:'close-case'},'*');}});
+    sec.querySelector('[data-home]').addEventListener('click',e=>{if(up){e.preventDefault();up.postMessage({type:'close-case'},'*');}});
     const cards=[...sec.querySelectorAll('.card')];
     if('IntersectionObserver' in window){const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('on');io.unobserve(x.target);}}),{threshold:.15});cards.forEach(c=>io.observe(c));}
     else cards.forEach(c=>c.classList.add('on'));
