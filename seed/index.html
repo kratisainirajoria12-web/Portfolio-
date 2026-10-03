@@ -48,9 +48,9 @@ header{position:fixed;left:0;right:0;top:0;z-index:10;display:flex;justify-conte
   padding:calc(18px + env(safe-area-inset-top,0px)) clamp(16px,4vw,48px) 0}
 .logo{font-family:var(--f-display);font-weight:600;font-size:22px;letter-spacing:-.02em;color:var(--c-ink,var(--ink));text-decoration:none;background:none;border:0;cursor:pointer;padding:0}
 nav{display:flex;gap:clamp(14px,2.4vw,32px)}
-nav button{font:500 14px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink,var(--ink));
+nav button,nav a{text-decoration:none;font:500 14px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink,var(--ink));
   background:none;border:0;padding:8px 0;cursor:pointer;border-bottom:1px solid transparent}
-nav button:hover,nav button:focus-visible{border-bottom-color:currentColor;outline:none}
+nav button:hover,nav button:focus-visible,nav a:hover,nav a:focus-visible{border-bottom-color:currentColor;outline:none}
 .logo:focus-visible{outline:2px solid currentColor;outline-offset:4px}
 
 .hud{position:fixed;z-index:10;text-shadow:var(--c-glow,0 0 14px rgba(255,248,235,.95));left:clamp(16px,4vw,48px);bottom:calc(22px + env(safe-area-inset-bottom,0px));
@@ -134,7 +134,10 @@ body.case-open{overflow:hidden}
 
 #contact h2{font-size:clamp(34px,4.2vw,58px)}
 .links{display:flex;flex-wrap:wrap;gap:10px 18px;margin:18px 0 22px;font-size:15px}
-.links span{border-bottom:1px solid currentColor;padding-bottom:2px}
+.links a,.links .mail{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:2px}
+.links a:hover,.links a:focus-visible{opacity:.75;outline:none}
+.links .copy{font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:inherit;background:none;border:1px solid currentColor;border-radius:999px;padding:5px 9px;margin-left:8px;cursor:pointer;vertical-align:2px}
+.links .em{display:inline-flex;align-items:center;flex-wrap:wrap}
 .again{font:600 14px/1 var(--f-body);letter-spacing:.02em;padding:14px 20px;border-radius:999px;border:0;cursor:pointer;
   background:var(--ink);color:var(--paper);display:inline-flex;gap:10px;align-items:center}
 .again:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
@@ -157,7 +160,7 @@ body.case-open{overflow:hidden}
   body[data-ink="light"]{--c-card:rgba(24,14,9,.62)}
   .panel.top-m{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0;text-shadow:var(--c-glow,0 0 18px rgba(255,248,235,.9))}
   #work{background:none;backdrop-filter:none;-webkit-backdrop-filter:none;padding:0}
-  nav{gap:14px} nav button{font-size:12px}
+  nav{gap:14px} nav button,nav a{font-size:12px}
   .tl{gap:14px}.tl h3{font-size:18px}.tl .where{font-size:14px}.tl .lesson{font-size:13px}
   .chip{font-size:12px;padding:7px 10px}.chips{gap:6px}.lbl{margin:12px 0 8px!important}.tools{font-size:13px}
   .tagline{font-size:16px}
@@ -204,6 +207,7 @@ body.case-open{overflow:hidden}
     <button data-go="330">About</button>
     <button data-go="1180">Work</button>
     <button data-go="1330">Contact</button>
+    <a href="resume.pdf" target="_blank" rel="noopener">Resume</a>
   </nav>
 </header>
 
@@ -265,7 +269,7 @@ body.case-open{overflow:hidden}
   <p class="eyebrow">06 · Bloom · Say hello</p>
   <h2>Let's build something together.</h2>
   <p>I'm open to product design roles, freelance projects and collaborations.</p>
-  <div class="links"><span>[your@email.com]</span><span>LinkedIn</span><span>Behance</span><span>Resume</span></div>
+  <div class="links"><span class="em"><span class="mail">Kratisainirajoria12@gmail.com</span><button class="copy" type="button" data-copy="Kratisainirajoria12@gmail.com">Copy</button></span><a href="https://www.linkedin.com/in/kratisaini?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/kratirajoria12" target="_blank" rel="noopener">Behance</a><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></div>
   <button class="again" data-go="0">↺ Plant it again</button>
 </section>
 
@@ -690,7 +694,13 @@ const maxScroll=()=>document.documentElement.scrollHeight-innerHeight;
 function readScroll(){const max=maxScroll();target=max>0?clamp(scrollY/max):0;}
 addEventListener('scroll',readScroll,{passive:true});
 function resize(){sizeCanvas(scv);if(MAC)MAC.size();readScroll();}
-document.querySelectorAll('[data-go]').forEach(b=>b.addEventListener('click',()=>{const max=maxScroll();
+// Plant it again: straight back to the first frame, no rewinding through the story
+document.querySelectorAll('.again').forEach(b=>b.addEventListener('click',e=>{e.stopImmediatePropagation();document.documentElement.style.scrollBehavior='auto';
+  scrollTo(0,0);target=0;cur=0;vel=0;}));
+document.querySelectorAll('.copy[data-copy]').forEach(b=>b.addEventListener('click',()=>{const t=b.dataset.copy,done=()=>{b.textContent='Copied';setTimeout(()=>b.textContent='Copy',1600);};
+  try{navigator.clipboard.writeText(t).then(done,()=>sel());}catch(err){sel();}
+  function sel(){const r=document.createRange();r.selectNodeContents(b.previousElementSibling);const s=getSelection();s.removeAllRanges();s.addRange(r);}}));
+document.querySelectorAll('[data-go]:not(.again)').forEach(b=>b.addEventListener('click',()=>{const max=maxScroll();
   const p=gOf(+b.dataset.go);scrollTo({top:p*max,behavior:(reduce||Math.abs(p-target)>.3)?'auto':'smooth'});}));
 resize();addEventListener('resize',resize);
 let t0=performance.now(),last=t0;
