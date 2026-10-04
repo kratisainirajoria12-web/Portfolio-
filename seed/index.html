@@ -510,15 +510,18 @@ const LOOP_SHIFT=TL.end[0]-LOOP_U0;               // the end of the page is this
 const vuOf=u=>u>=TL.end[0]?u-LOOP_SHIFT:u;
 
 /* ================= frames ================= */
-function seq(dir,n,k=1){return{dir,n,k,f:new Array(n)};}
+// phones in portrait get their own sharper set: the middle of each frame (x 250..950), AI-upscaled, in sheets of four
+const MOB=innerWidth<=820&&innerHeight>innerWidth*1.1;
+function seq(dir,n,k=1){return MOB?{dir:'m/'+dir,n,k:4,fw:1050,fh:1080,cx0:250,cw:700,f:new Array(n),p:{}}
+  :{dir,n,k,fw:1280,fh:720,cx0:0,cw:1280,f:new Array(n),p:{}};}
 const PLANT=seq('catch',109), DIVE=seq('dive',151,4), ROOTS=seq('grow',120), BLOOM=seq('bloom',280), HOLD=seq('hold',120,4), ZOOM=seq('zoom',22);
 let loaded=0;const NEED=24;
 const loader=$('#loader'), loadTxt=$('#loadTxt');
-function load(S,i){return new Promise(r=>{if(i>=S.n||S.f[i])return r();const im=new Image();im.decoding='async';
-  const sh=Math.floor(i/S.k);
-  im.onload=()=>{if(S.k>1){for(let j=0;j<S.k&&sh*S.k+j<S.n;j++)S.f[sh*S.k+j]={sheet:im,row:j,naturalWidth:1280,naturalHeight:720};}
-    else S.f[i]=im;if(S===PLANT&&i<NEED){loaded++;loadTxt.textContent='Planting… '+Math.round(loaded/NEED*100)+'%';}r()};
-  im.onerror=r;im.src=S.k>1?S.dir+'/s'+String(sh).padStart(3,'0')+'.webp':S.dir+'/f'+String(i).padStart(3,'0')+'.webp';});}
+function load(S,i){if(i>=S.n||S.f[i])return Promise.resolve();const sh=Math.floor(i/S.k);if(S.p[sh])return S.p[sh];
+  return S.p[sh]=new Promise(r=>{const im=new Image();im.decoding='async';
+  im.onload=()=>{for(let j=0;j<S.k&&sh*S.k+j<S.n;j++){const q=sh*S.k+j;S.f[q]=S.k>1||S.fw!==1280?{sheet:im,row:S.k>1?j:0,fw:S.fw,fh:S.fh,cx0:S.cx0,cw:S.cw}:im;
+      if(S===PLANT&&q<NEED){loaded++;loadTxt.textContent='Planting… '+Math.min(100,Math.round(loaded/NEED*100))+'%';}}r()};
+  im.onerror=()=>{delete S.p[sh];r();};im.src=S.k>1?S.dir+'/s'+String(sh).padStart(3,'0')+'.webp':S.dir+'/f'+String(i).padStart(3,'0')+'.webp';});}
 /* scroll-aware loader: key frames of every section first, then the frames nearest the reader, 10 at a time */
 const SEQPOS=()=>[[PLANT,TL.catch[0],D0],[DIVE,...TL.dive],[ROOTS,...TL.roots],[BLOOM,...TL.bloom],[HOLD,...TL.hold],[ZOOM,...TL.zoom]];
 const loading=new Set();
@@ -541,7 +544,7 @@ const film=$('#film'),scv=$('#storyCv'),sctx=scv.getContext('2d'),gl3=$('#gl3'),
 function sizeCanvas(c){const d=Math.min(devicePixelRatio||1,2);c.width=Math.round(innerWidth*d);c.height=Math.round(innerHeight*d);const x=c.getContext('2d');x.imageSmoothingEnabled=true;x.imageSmoothingQuality='high';}
 const portrait=()=>innerHeight>innerWidth*1.1;
 const topCol=new WeakMap(),probe=document.createElement('canvas');probe.width=probe.height=1;const pctx=probe.getContext('2d',{willReadFrequently:true});
-function skyOf(f){let c=topCol.get(f);if(!c){pctx.drawImage(f,0,0,f.naturalWidth,6,0,0,1,1);const d=pctx.getImageData(0,0,1,1).data;c=[d[0],d[1],d[2]];topCol.set(f,c);}return c;}
+function skyOf(f){let c=topCol.get(f);if(!c){if(f.sheet)pctx.drawImage(f.sheet,0,f.row*f.fh,f.fw,6*f.fh/720,0,0,1,1);else pctx.drawImage(f,0,0,f.naturalWidth,6,0,0,1,1);const d=pctx.getImageData(0,0,1,1).data;c=[d[0],d[1],d[2]];topCol.set(f,c);}return c;}
 const dipEl=$('#dip'),grainEl=$('#grain'),scrimEl=$('#scrim'),dawnEl=$('#dawn'),vigEl=$('#vig');
 
 /* golden pollen: drifts in front of the footage underground and around the bloom; scroll speed stirs it */
@@ -591,7 +594,7 @@ function frameFit(iw,ih,fx,m){const cw=innerWidth,ch=innerHeight;
 function paint(img,fit,alpha=1,oy=0){
   if(!img)return;const d=scv.width/innerWidth;const {w,h,dx,dy}=fit;
   sctx.globalAlpha=alpha;
-  if(img.sheet)sctx.drawImage(img.sheet,0,img.row*720,1280,720,dx*d,(dy+oy)*d,w*d,h*d);else sctx.drawImage(img,dx*d,(dy+oy)*d,w*d,h*d);
+  if(img.sheet)sctx.drawImage(img.sheet,0,img.row*img.fh,img.fw,img.fh,(dx+img.cx0*w/1280)*d,(dy+oy)*d,img.cw*w/1280*d,h*d);else sctx.drawImage(img,dx*d,(dy+oy)*d,w*d,h*d);
   sctx.globalAlpha=1;}
 function bars(fit){const {h,dy}=fit,d=scv.width/innerWidth;if(h>=innerHeight-1)return;
   const col='rgb(5,4,3)',clr='rgba(5,4,3,0)';
@@ -614,9 +617,10 @@ BLOOM.pos=k=>TL.bloom[0]+(k<=23?k:k<183?23+(k-23)/4:k-120)/159*(TL.bloom[1]-TL.b
 
 /* the seed head in 3D (three.js), created once the last zoom frame is in */
 let MAC=null,macFail=false;
+const Z21=new Image();Z21.src='zoom/f021.webp';   // the full last zoom frame is the seed head's backdrop
 function macro(){if(MAC||macFail)return MAC;
-  if(!window.THREE||!ZOOM.f[21]){if(!window.THREE)macFail=true;return null;}
-  try{MAC=makeMacro(gl3,ZOOM.f[21]);}catch(e){macFail=true;MAC=null;}return MAC;}
+  if(!window.THREE||!Z21.naturalWidth){if(!window.THREE)macFail=true;return null;}
+  try{MAC=makeMacro(gl3,Z21);}catch(e){macFail=true;MAC=null;}return MAC;}
 let mouse={x:0,y:0,tx:0,ty:0};
 addEventListener('pointermove',e=>{mouse.tx=e.clientX/innerWidth*2-1;mouse.ty=e.clientY/innerHeight*2-1;},{passive:true});
 
