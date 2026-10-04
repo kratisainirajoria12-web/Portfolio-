@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Krati Saini Resume</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap">
+<link rel="stylesheet" href="case.css">
+<style>
+/* Resume: the case-study layout (hero, then the white sheet riding over it), with her resume's content */
+:root{--hero-bg:#1a110b;--accent:#9a5a33}
+.hero.rz{display:grid;align-content:end;padding:0 0 calc(44px + clamp(28px,4vw,56px));color:#fbf1e2;
+  background:radial-gradient(ellipse at 70% 0%,#4a2e1b 0%,rgba(74,46,27,0) 60%),radial-gradient(ellipse at 10% 100%,#3a2416,rgba(58,36,22,0) 55%),var(--hero-bg)}
+.rz .in{width:min(1120px,100%);margin:0 auto;padding-inline:16px}
+@media (min-width:1152px){.rz .in{padding-inline:0}}
+.rz .kick{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#e9b98a;margin:0}
+.rz .nm{font-weight:400;font-size:clamp(44px,8vw,112px);line-height:1;letter-spacing:-.03em;margin:.18em 0 0;padding:0}
+.rz .nm span{display:inline-block}
+.js .rz .kick,.js .rz .nm span{opacity:0;transform:translateY(24px);filter:blur(6px);transition:opacity .9s var(--ease) var(--d,0ms),transform 1s var(--ease) var(--d,0ms),filter .9s var(--ease) var(--d,0ms)}
+.js .rz.on .kick,.js .rz.on .nm span{opacity:1;transform:none;filter:none}
+
+.meta a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
+.meta a:hover,.meta a:focus-visible{color:var(--accent);outline:none}
+.cp{font:500 11px/1 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:none;border:1px solid var(--line);border-radius:999px;
+  padding:5px 10px;margin-left:10px;cursor:pointer;vertical-align:2px;transition:border-color .3s,background .3s,color .3s}
+.cp:hover,.cp:focus-visible{border-color:var(--ink);background:var(--ink);color:#fff;outline:none}
+button.live{border:0;cursor:pointer}
+
+/* experience: one block per role, its points stagger in */
+.job{margin-top:clamp(28px,3.2vw,44px);padding-top:clamp(20px,2.4vw,28px);border-top:1px solid var(--line)}
+.job:first-of-type{border-top:0;padding-top:0}
+.jh{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:4px 16px}
+.jh h3{font-size:clamp(17px,1.5vw,21px);font-weight:500;margin:0;display:flex;align-items:center;gap:12px}
+.jh h3::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none;transition:transform .45s var(--ease),background .3s}
+.job:hover .jh h3::before{transform:scale(1.7);background:var(--accent)}
+.job .at{display:block;color:var(--accent);font-size:clamp(14px,1.15vw,16px);margin:4px 0 0 18px}
+.dates{font-size:14px;color:var(--soft);white-space:nowrap;font-variant-numeric:tabular-nums}
+.job ul{margin:14px 0 0;padding-left:36px;display:grid;gap:8px;font-size:clamp(15px,1.15vw,17px);line-height:1.5}
+.job li{transition:transform .45s var(--ease)}
+.job li:hover{transform:translateX(6px)}
+.job li::marker{color:var(--accent)}
+
+/* education: the same rows as the overview */
+.edu{display:grid;gap:10px;margin-top:clamp(20px,2.4vw,32px)}
+.edu > div{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 16px;padding:16px 18px;border-radius:16px;border:1px solid var(--line);
+  transition:transform .5s var(--ease),box-shadow .5s var(--ease),border-color .3s}
+.edu > div:hover{transform:translateY(-4px);box-shadow:0 22px 34px -24px rgba(20,20,40,.4);border-color:transparent}
+.edu b{display:block;color:var(--ink);font-weight:500;font-size:clamp(16px,1.3vw,19px)}
+.edu span{color:var(--soft);font-size:15px}
+.edu .nift{background:#faf3ec;border-color:transparent}
+
+/* impact: figures count up as they arrive */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(8px,1vw,14px);margin-top:clamp(20px,2.4vw,32px)}
+@media (max-width:640px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.stat{padding:clamp(16px,2vw,26px);border-radius:clamp(14px,1.6vw,22px);background:#f6f3f0;transition:transform .5s var(--ease),box-shadow .5s var(--ease)}
+.stat:hover{transform:translateY(-6px);box-shadow:0 26px 40px -26px rgba(20,20,40,.45)}
+.stat b{display:block;font-weight:500;font-size:clamp(30px,3.4vw,48px);line-height:1.05;letter-spacing:-.02em;color:var(--accent);font-variant-numeric:tabular-nums}
+.stat > span{display:block;margin-top:6px;font-size:15px;color:var(--soft)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:clamp(16px,2vw,24px)}
+.chip{font:500 14px/1 var(--f);padding:10px 14px;border-radius:999px;border:1px solid var(--line);transition:transform .4s var(--ease),background .3s,color .3s,border-color .3s}
+.chip:hover{transform:translateY(-3px);background:var(--ink);color:#fff;border-color:var(--ink)}
+.chip.soft{background:#faf3ec;border-color:transparent;color:#6e3d20}
+.chip.soft:hover{background:var(--accent);color:#fff}
+
+@media (prefers-reduced-motion:reduce){.job li:hover,.edu > div:hover,.stat:hover,.chip:hover{transform:none}}
+@media print{
+  html,body{background:#fff}.hero{display:none}.sheet{margin:0;box-shadow:none;border-radius:0;padding:0}
+  button.live,.cp{display:none}.js [data-rv]{opacity:1!important;transform:none!important;filter:none!important}
+  section{margin-top:28px;break-inside:avoid-page}.job{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<header class="hero rz">
+  <div class="in">
+    <p class="kick">Product Designer · UI/UX Designer</p>
+    <h2 class="nm" aria-label="Krati Saini"><span aria-hidden="true">Krati</span> <span aria-hidden="true">Saini</span></h2>
+  </div>
+</header>
+
+<main class="sheet">
+  <div class="wrap">
+    <div class="head">
+      <h1>Resume</h1>
+      <dl class="meta">
+        <div class="row"><dt>Profile</dt><dd>Product and UI/UX Designer with <strong>3+ years</strong> designing e-commerce websites, mobile apps and Shopify apps for Indian and international D2C brands. Strong in user and market research, CRO and UX audits, usability and A/B testing, information architecture, accessibility and design systems. Uses AI tools in everyday design work. Leads end-to-end design through developer handoff and mentors junior designers. NIFT-trained, bringing a maker's eye for craft, materials and detail to digital products that feel as good as they work.</dd></div>
+        <div class="row"><dt>Location</dt><dd>Noida, India</dd></div>
+        <div class="row"><dt>Phone</dt><dd><a href="tel:+916375606348">+91 6375606348</a></dd></div>
+        <div class="row"><dt>Email</dt><dd><a id="email" href="mailto:kratirajoria12@gmail.com">kratirajoria12@gmail.com</a><button class="cp" id="copy-email" type="button">Copy</button></dd></div>
+        <div class="row"><dt>LinkedIn</dt><dd><a href="https://www.linkedin.com/in/kratisaini" target="_blank" rel="noopener">linkedin.com/in/kratisaini</a></dd></div>
+      </dl>
+      <button class="live" type="button" id="print">Save as PDF <span aria-hidden="true">→</span></button>
+    </div>
+
+    <section>
+      <h2>Experience</h2>
+      <div class="job">
+        <div class="jh"><h3>UX/UI Design Specialist</h3><span class="dates">Mar 2024 – Present</span></div>
+        <span class="at">Seventh Triangle Consultancy</span>
+        <ul>
+          <li>Led the full rebrand of a <strong>Shark Tank India S4</strong> period care brand, from brand and market research to guidelines and a redesigned e-commerce website.</li>
+          <li>Researched Indian internet usage, e-commerce behavior and digital trends with the design team for the <strong>Commerce Story: Design Edition India 2025</strong> handbook.</li>
+          <li>Designed one of the <strong>ABFRL</strong> websites from scratch, defining IA, user journeys and responsive UI for a large Indian shopper base.</li>
+          <li>Led research and design for a <strong>Shopify discount discovery app</strong>, reaching <strong>1,500+ installs and a 4.5★ rating</strong> from 50+ reviews.</li>
+          <li>Designed a <strong>Shopify inventory management app</strong>, turning complex stock data into clear, efficient merchant workflows.</li>
+          <li>Ran <strong>CRO and UX audits for 100+ e-commerce brands</strong>, driving a <strong>59% lift in add-to-cart conversion (5.37% → 8.57%)</strong> for a key client.</li>
+          <li>Designed booking journeys for a leading pet care brand and a mobile commerce app for a D2C sports brand, from user flows to prototypes.</li>
+          <li>Worked with <strong>20+ brands</strong> on interface, IA and design system improvements, including Hidesign, Beauty by Bie, Earth Rhythm and Kay Beauty (Nykaa).</li>
+          <li>Managed <strong>2 junior designers</strong> and mentored <strong>4 interns</strong>, working with clients, developers and PMs from brief to launch.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <div class="jh"><h3>UX/UI Design Intern</h3><span class="dates">Sep 2023 – Dec 2023</span></div>
+        <span class="at">Crafticon Technologies</span>
+        <ul>
+          <li>Designed UI for multiple D2C brands and helped build their brand guidelines.</li>
+          <li>Studied the Indian e-commerce market to understand user behavior, needs and expectations.</li>
+        </ul>
+      </div>
+      <div class="job">
+        <div class="jh"><h3>Product Design Intern</h3><span class="dates">Jun 2022 – Aug 2023</span></div>
+        <span class="at">TONOTO · Lino Perros · Radnik</span>
+        <ul>
+          <li>Led leather bag and seasonal collections from trend research and materials to photoshoots; designed brand prints, banners and social creatives.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section>
+      <h2>Education &amp; Certification</h2>
+      <div class="edu">
+        <div class="nift"><span><b>National Institute of Fashion Technology (NIFT)</b><span>Bachelor of Design · Leather Design</span></span><span class="dates">2023</span></div>
+        <div><span><b>Google (Coursera)</b><span>Google UX Design Professional Certificate</span></span><span class="dates">2023</span></div>
+        <div><span><b>University of Rajasthan</b><span>Bachelor of Science (B.Sc.)</span></span><span class="dates">2018</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Impact</h2>
+      <div class="stats">
+        <div class="stat"><b><span data-count="100">100</span>+</b><span>CRO audits</span></div>
+        <div class="stat"><b>+<span data-count="59">59</span>%</b><span>add-to-cart lift</span></div>
+        <div class="stat"><b><span data-count="1.5">1.5</span>K+</b><span>app installs</span></div>
+        <div class="stat"><b><span data-count="4.5">4.5</span>★</b><span>app rating</span></div>
+        <div class="stat"><b><span data-count="3">3</span>+</b><span>years in UX</span></div>
+        <div class="stat"><b><span data-count="6">6</span></b><span>designers mentored</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>Brands</h2>
+      <p>Worked with <strong>20+ brands</strong>, including:</p>
+      <div class="chips">
+        <span class="chip">HealthFab</span><span class="chip">ABFRL</span><span class="chip">Hidesign</span><span class="chip">Kay Beauty</span><span class="chip">Earth Rhythm</span><span class="chip">Beauty by Bie</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Skills</h2>
+      <div class="chips">
+        <span class="chip soft">User Research</span><span class="chip soft">Usability Testing</span><span class="chip soft">A/B Testing</span><span class="chip soft">UX Audits</span><span class="chip soft">CRO</span><span class="chip soft">Information Architecture</span><span class="chip soft">User Flows</span><span class="chip soft">Wireframing</span><span class="chip soft">Prototyping</span><span class="chip soft">Interaction Design</span><span class="chip soft">Design Systems</span><span class="chip soft">Accessibility (WCAG)</span><span class="chip soft">Developer Handoff</span>
+      </div>
+    </section>
+
+    <section>
+      <h2>Tools</h2>
+      <div class="chips">
+        <span class="chip">Figma</span><span class="chip">FigJam</span><span class="chip">Framer</span><span class="chip">Illustrator</span><span class="chip">Photoshop</span><span class="chip">Shopify</span><span class="chip">WordPress</span><span class="chip">Google Analytics</span>
+      </div>
+    </section>
+  </div>
+</main>
+<script src="case.js"></script>
+<script>
+(()=>{
+  // inside the portfolio's viewer, name the page
+  if(window.parent!==window)window.parent.postMessage({type:'case-title',title:'Resume'},'*');
+  // hero: the name rises in, word by word
+  const rz=document.querySelector('.hero.rz');
+  rz.querySelectorAll('.kick,.nm span').forEach((e,i)=>e.style.setProperty('--d',100+i*140+'ms'));
+  requestAnimationFrame(()=>requestAnimationFrame(()=>rz.classList.add('on')));
+  // the hero eases back as the sheet slides over it, like the other pages
+  const inr=rz.querySelector('.in');
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const on=()=>{const y=Math.min(scrollY,600);inr.style.transform=`translateY(${(y*.25).toFixed(1)}px)`;inr.style.opacity=(1-y/700).toFixed(3);};addEventListener('scroll',on,{passive:true});}
+  const btn=document.getElementById('copy-email'),email=document.getElementById('email');
+  btn.addEventListener('click',()=>{const done=()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1500);};
+    const fallback=()=>{const r=document.createRange();r.selectNodeContents(email);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';};
+    try{navigator.clipboard.writeText(email.textContent).then(done,fallback);}catch(e){fallback();}});
+  document.getElementById('print').addEventListener('click',()=>print());
+})();
+</script>
+</body>
+</html>
