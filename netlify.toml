@@ -1,0 +1,4 @@
+# Netlify: serve the Seed portfolio (the seed/ folder) as the site. Plain static files, no build step.
+[build]
+  publish = "seed"
+  command = ""
