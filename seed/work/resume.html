@@ -9,19 +9,11 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&display=swap">
 <link rel="stylesheet" href="case.css">
 <style>
-/* Resume: the case-study layout (hero, then the white sheet riding over it), with her resume's content */
-:root{--hero-bg:#1a110b;--accent:#9a5a33}
-.hero.rz{display:grid;align-content:end;padding:0 0 calc(44px + clamp(28px,4vw,56px));color:#fbf1e2;
-  background:radial-gradient(ellipse at 70% 0%,#4a2e1b 0%,rgba(74,46,27,0) 60%),radial-gradient(ellipse at 10% 100%,#3a2416,rgba(58,36,22,0) 55%),var(--hero-bg)}
-.rz .in{width:min(1120px,100%);margin:0 auto;padding-inline:16px}
-@media (min-width:1152px){.rz .in{padding-inline:0}}
-.rz .kick{font-size:12px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#e9b98a;margin:0}
-.rz .nm{font-weight:400;font-size:clamp(44px,8vw,112px);line-height:1;letter-spacing:-.03em;margin:.18em 0 0;padding:0}
-.rz .nm span{display:inline-block}
-.js .rz .kick,.js .rz .nm span{opacity:0;transform:translateY(24px);filter:blur(6px);transition:opacity .9s var(--ease) var(--d,0ms),transform 1s var(--ease) var(--d,0ms),filter .9s var(--ease) var(--d,0ms)}
-.js .rz.on .kick,.js .rz.on .nm span{opacity:1;transform:none;filter:none}
+/* Resume: the case-study sheet with her resume's content, opening straight on her profile */
+:root{--hero-bg:#fff;--accent:#9a5a33}
+.sheet{margin-top:0;border-radius:0;box-shadow:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 
-.head .tag{margin-top:clamp(14px,1.6vw,22px);font-style:italic;color:var(--soft);max-width:62ch}
 .meta a{color:inherit;text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:1px}
 .meta a:hover,.meta a:focus-visible{color:var(--accent);outline:none}
 .cp{font:500 11px/1 var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--ink);background:none;border:1px solid var(--line);border-radius:999px;
@@ -75,19 +67,11 @@ button.live{border:0;cursor:pointer}
 </style>
 </head>
 <body>
-<header class="hero rz">
-  <div class="in">
-    <p class="kick">Product Designer · UI/UX Designer</p>
-    <h2 class="nm" aria-label="Krati Saini"><span aria-hidden="true">Krati</span> <span aria-hidden="true">Saini</span></h2>
-  </div>
-</header>
-
 <main class="sheet">
   <div class="wrap">
     <div class="head">
-      <h1>Resume</h1>
-      <p class="tag">“I started out designing bags you could hold. Now I design apps you scroll through. And I’m still wondering why people do what they do.”</p>
-      <dl class="meta">
+      <h1 class="sr">Krati Saini, Resume</h1>
+      <dl class="meta" style="margin-top:0">
         <div class="row"><dt>Profile</dt><dd>Product and UI/UX Designer with <strong>3+ years</strong> designing e-commerce websites, mobile apps and Shopify apps for Indian and international D2C brands. Strong in user and market research, CRO and UX audits, usability and A/B testing, information architecture, accessibility and design systems. Uses AI tools in everyday design work. Leads end-to-end design through developer handoff and mentors junior designers. NIFT-trained, bringing a maker's eye for craft, materials and detail to digital products that feel as good as they work.</dd></div>
         <div class="row"><dt>Location</dt><dd>Noida, India</dd></div>
         <div class="row"><dt>Phone</dt><dd><a href="tel:+916375606348">+91 6375606348</a></dd></div>
@@ -179,13 +163,6 @@ button.live{border:0;cursor:pointer}
 (()=>{
   // inside the portfolio's viewer, name the page
   if(window.parent!==window)window.parent.postMessage({type:'case-title',title:'Resume'},'*');
-  // hero: the name rises in, word by word
-  const rz=document.querySelector('.hero.rz');
-  rz.querySelectorAll('.kick,.nm span').forEach((e,i)=>e.style.setProperty('--d',100+i*140+'ms'));
-  requestAnimationFrame(()=>requestAnimationFrame(()=>rz.classList.add('on')));
-  // the hero eases back as the sheet slides over it, like the other pages
-  const inr=rz.querySelector('.in');
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches){const on=()=>{const y=Math.min(scrollY,600);inr.style.transform=`translateY(${(y*.25).toFixed(1)}px)`;inr.style.opacity=(1-y/700).toFixed(3);};addEventListener('scroll',on,{passive:true});}
   const btn=document.getElementById('copy-email'),email=document.getElementById('email');
   btn.addEventListener('click',()=>{const done=()=>{btn.textContent='Copied';setTimeout(()=>btn.textContent='Copy',1500);};
     const fallback=()=>{const r=document.createRange();r.selectNodeContents(email);const s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='Selected';};
