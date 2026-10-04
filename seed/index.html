@@ -52,6 +52,9 @@ nav button,nav a{text-decoration:none;font:500 14px/1 var(--f-body);letter-spaci
   background:none;border:0;padding:8px 0;cursor:pointer;border-bottom:1px solid transparent}
 nav button:hover,nav button:focus-visible,nav a:hover,nav a:focus-visible{border-bottom-color:currentColor;outline:none}
 .logo:focus-visible{outline:2px solid currentColor;outline-offset:4px}
+/* centre the letters, not the line boxes: each item is trimmed to its capitals, so Krati and the smaller labels share one optical middle */
+header .logo,header .hres,nav button,nav a{text-box:trim-both cap alphabetic}
+@supports not (text-box:trim-both cap alphabetic){header .hres,nav button,nav a{position:relative;top:.1em}}
 .hl{display:flex;align-items:center;gap:clamp(16px,2.4vw,28px)}
 .hl .hres{font:500 14px/1 var(--f-body);letter-spacing:.06em;text-transform:uppercase;color:var(--c-ink,var(--ink));text-decoration:none;padding:8px 0;border-bottom:1px solid transparent}
 .hl .hres:hover,.hl .hres:focus-visible{border-bottom-color:currentColor;outline:none}
@@ -232,7 +235,7 @@ body.case-open{overflow:hidden}
 <div id="dof" aria-hidden="true"></div><div id="tint" aria-hidden="true"></div>
 
 <header>
-  <div class="hl"><button class="logo" data-go="0" aria-label="Back to start">Krati</button><a class="hres" href="resume.pdf" target="_blank" rel="noopener">Resume</a></div>
+  <div class="hl"><button class="logo" data-go="0" aria-label="Back to start">Krati</button><a class="hres" href="work/resume.html" data-case="page" data-title="Resume">Resume</a></div>
   <nav aria-label="Jump to">
     <button data-go="330">About</button>
     <button data-go="1180">Work</button>
@@ -299,7 +302,7 @@ body.case-open{overflow:hidden}
   <p class="eyebrow">06 · Bloom · Say hello</p>
   <h2>Let's build something together.</h2>
   <p>I'm open to product design roles, freelance projects and collaborations.</p>
-  <div class="links"><span class="em"><span class="mail">Kratisainirajoria12@gmail.com</span><button class="copy" type="button" data-copy="Kratisainirajoria12@gmail.com">Copy</button></span><a href="https://www.linkedin.com/in/kratisaini?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/kratirajoria12" target="_blank" rel="noopener">Behance</a><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></div>
+  <div class="links"><span class="em"><span class="mail">Kratisainirajoria12@gmail.com</span><button class="copy" type="button" data-copy="Kratisainirajoria12@gmail.com">Copy</button></span><a href="https://www.linkedin.com/in/kratisaini?utm_source=share_via&amp;utm_content=profile&amp;utm_medium=member_android" target="_blank" rel="noopener">LinkedIn</a><a href="https://www.behance.net/kratirajoria12" target="_blank" rel="noopener">Behance</a><a href="work/resume.html" data-case="page" data-title="Resume">Resume</a></div>
   <button class="again" data-go="0">↺ Plant it again</button>
 </section>
 
@@ -783,7 +786,7 @@ function open(a){back=a;title.textContent=a.dataset.title;view.textContent='';
   else{const im=document.createElement('img');im.src=a.getAttribute('href');im.alt=a.dataset.title+' case study';view.appendChild(im);view.style.overflow='auto';view.scrollTop=0;}
   box.hidden=false;document.body.classList.add('case-open');window.__sound&&window.__sound.duck(true);close.focus();}
 function shut(){window.__sound&&window.__sound.duck(false);box.hidden=true;view.textContent='';document.body.classList.remove('case-open');if(back)back.focus();}
-document.querySelectorAll('a.card[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
+document.querySelectorAll('a[data-case]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();open(a);}));
 close.addEventListener('click',shut);addEventListener('message',e=>{if(!e.data||box.hidden)return;if(e.data.type==='close-case')shut();else if(e.data.type==='case-title'&&typeof e.data.title==='string')title.textContent=e.data.title;});addEventListener('keydown',e=>{if(e.key==='Escape'&&!box.hidden)shut();});})();
 </script>
 
