@@ -142,7 +142,10 @@ body[data-hud="light"] .hud{--c-ink:var(--light-ink);--c-soft:var(--light-soft);
 .work{display:grid;gap:12px;margin-top:6px}
 .card{text-shadow:none;display:grid;grid-template-columns:auto 1fr;gap:4px 16px;padding:16px 18px;border-radius:14px;background:rgba(255,250,241,.82);
   backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--ink);border:1px solid rgba(154,90,0,.18)}
-.card .n{font:500 11px/1.6 var(--f-mono);color:var(--amber);grid-row:span 3}
+.card .n{font:500 11px/1.6 var(--f-mono);color:var(--amber);grid-row:span 4}
+.card .go{grid-column:2;margin-top:6px;font-size:13px;font-weight:600;color:var(--amber);display:inline-flex;align-items:center;gap:6px;width:max-content;border-bottom:1px solid currentColor;padding-bottom:1px}
+.card .go .ar{transition:transform .2s}
+a.card:hover .go .ar,a.card:focus-visible .go .ar{transform:translateX(4px)}
 .card h3{font:500 20px/1.25 var(--f-display);letter-spacing:-.01em;margin:0}
 .card .meta{font-size:13px;color:var(--ink-soft)}
 .card .out{font-size:14px}
@@ -230,7 +233,7 @@ body.case-open{overflow:hidden}
 
 <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateT"><div class="in">
   <small>Krati Saini · Portfolio</small>
-  <h2 id="gateT">Every career starts with a seed.</h2>
+  <h2 id="gateT">Product · UI/UX&nbsp;Designer</h2>
   <p>This story is best with sound. Headphones welcome.</p>
   <div class="row"><button class="pri" type="button" data-sound="1"><span aria-hidden="true">♪</span> Enter with sound</button><button type="button" data-sound="0">Enter without sound</button></div>
 </div></div>
@@ -251,15 +254,13 @@ body.case-open{overflow:hidden}
 
 <div class="hud" aria-hidden="true">
   <div class="row"><span id="chNum">01</span><span id="chName">The seed</span></div>
-  <div class="day" id="day">Day 000</div>
-  <div class="row"><span id="season">Spring</span></div>
 </div>
 
 <div class="rail" id="rail"></div>
 
 <!-- panels: data-a/data-b = scroll window where each is readable -->
 <section class="panel" id="hello" data-a="0" data-b="40">
-  <h1>Hi, I am Krati,<br><span class="l2">a <em>Product Designer.</em></span></h1>
+  <h1>Hi, I am Krati</h1>
   <p class="tagline">I used to design products you could hold, now I design products you could scroll.</p>
   <div class="hint"><i></i>Scroll to plant the seed</div>
 </section>
@@ -297,9 +298,9 @@ body.case-open{overflow:hidden}
 <section class="panel" id="work" data-a="1122" data-b="1245">
   <p class="eyebrow">05 · Bloom · Selected work</p>
   <div class="work">
-    <a class="card" href="work/healthfab.html" data-case="page" data-title="Healthfab"><span class="n">01</span><h3>Healthfab <i aria-hidden="true">↗</i></h3><span class="meta">Rebranding Case Study · Brand Strategy &amp; Identity Design</span><span class="out">Same Product, New Story</span></a>
-    <a class="card" href="work/discount-discovery.html" data-case="page" data-title="Discount Discovery App"><span class="n">02</span><h3>Discount Discovery App <i aria-hidden="true">↗</i></h3><span class="meta">Shopify App · Case Study</span><span class="out">Every Discount, One Tap Away</span></a>
-    <a class="card" href="work/beauty-by-bie.html" data-case="page" data-title="Beauty by Bie"><span class="n">03</span><h3>Beauty by Bie <i aria-hidden="true">↗</i></h3><span class="meta">CRO Case Study · UX/UI Designer · CRO Strategy &amp; Redesign</span><span class="out">Designing for Better Conversions</span></a>
+    <a class="card" href="work/healthfab.html" data-case="page" data-title="Healthfab"><span class="n">01</span><h3>Healthfab <i aria-hidden="true">↗</i></h3><span class="meta">Rebranding Case Study · Brand Strategy &amp; Identity Design</span><span class="out">Same Product, New Story</span><span class="go">Read more <span class="ar" aria-hidden="true">→</span></span></a>
+    <a class="card" href="work/discount-discovery.html" data-case="page" data-title="Discount Discovery App"><span class="n">02</span><h3>Discount Discovery App <i aria-hidden="true">↗</i></h3><span class="meta">Shopify App · Case Study</span><span class="out">Every Discount, One Tap Away</span><span class="go">Read more <span class="ar" aria-hidden="true">→</span></span></a>
+    <a class="card" href="work/beauty-by-bie.html" data-case="page" data-title="Beauty by Bie"><span class="n">03</span><h3>Beauty by Bie <i aria-hidden="true">↗</i></h3><span class="meta">CRO Case Study · UX/UI Designer · CRO Strategy &amp; Redesign</span><span class="out">Designing for Better Conversions</span><span class="go">Read more <span class="ar" aria-hidden="true">→</span></span></a>
   </div>
 </section>
 
@@ -702,7 +703,7 @@ const rail=$('#rail');
 const railStops=[0,330,650,900,1180,1520];
 CH.forEach((c,i)=>{const b=document.createElement('button');b.dataset.go=railStops[i];b.setAttribute('aria-label','Go to '+c[2]);b.innerHTML='<span>'+c[1]+' '+c[2]+'</span>';rail.appendChild(b);});
 const railBtns=[...rail.children];
-const chNum=$('#chNum'),chName=$('#chName'),dayEl=$('#day'),seasonEl=$('#season');
+const chNum=$('#chNum'),chName=$('#chName');
 // split headings into letters (kept in words so lines still wrap), blocks get a stagger index
 function splitText(el){let i=0,line=0;const letters=[];
   const walk=(node)=>{[...node.childNodes].forEach(n=>{
@@ -726,9 +727,6 @@ function hud(u){
   const vu=vuOf(u);
   let c=0;CH.forEach((x,i)=>{if(vu>=x[0])c=i});
   if(c!==lastCh){lastCh=c;chNum.textContent=CH[c][1];chName.textContent=CH[c][2];railBtns.forEach((b,i)=>b.classList.toggle('on',i===c));}
-  const d=vu<190?0:Math.round(range(vu,190,1700)*92);
-  dayEl.textContent='Day '+String(d).padStart(3,'0');
-  seasonEl.textContent=d<32?'Spring':d<72?'Summer':'Late summer';
   document.body.dataset.ink=(vu>228&&vu<1720)?'light':'dark';
   document.body.dataset.hud='light';
   panels.forEach(p=>{let on=vu>=p.a&&vu<=p.b;

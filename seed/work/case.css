@@ -51,7 +51,6 @@ section > p + p{margin-top:12px}
 .lead{font-style:italic;font-weight:500;font-size:clamp(14px,1.15vw,17px)}
 .sub{margin-top:clamp(32px,3.6vw,52px)!important}
 .sub h3{font-size:clamp(15px,1.25vw,18px);font-weight:600;margin:0 0 10px;display:flex;align-items:center;gap:12px}
-.sub h3::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
 .note{font-size:clamp(14px,1.15vw,17px)}
 
 .fig{margin-top:clamp(32px,4vw,64px)}
