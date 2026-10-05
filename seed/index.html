@@ -39,7 +39,7 @@ body{font-family:var(--f-body);font-size:16px;line-height:1.55;margin:0}
 #dawn{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0;mix-blend-mode:screen;background:radial-gradient(ellipse 70% 60% at 62% 30%,rgba(255,214,150,.75),rgba(255,190,120,.25) 45%,rgba(255,180,100,0) 75%)}
 #pollen{position:fixed;inset:0;z-index:5;pointer-events:none;width:100%;height:100%}
 #iris{position:fixed;inset:0;z-index:4;pointer-events:none;opacity:0}
-#grain{position:fixed;inset:-40px;z-index:6;pointer-events:none;opacity:.07;mix-blend-mode:overlay}
+#grain{position:fixed;inset:-40px;z-index:6;pointer-events:none;opacity:.025;mix-blend-mode:overlay}
 #dip{position:fixed;inset:0;z-index:6;pointer-events:none;opacity:0;--r:100%;background:radial-gradient(circle at 50% 50%,rgba(36,20,9,0) var(--r),#24140a calc(var(--r) + 38%))}
 #vig{position:fixed;inset:0;z-index:5;pointer-events:none;background:radial-gradient(ellipse 85% 80% at 50% 48%,rgba(10,8,6,0) 60%,rgba(10,8,6,.28) 100%)}
 #soilCover{position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,#3a2518,#0e0906 55%,#050403 85%);opacity:0;pointer-events:none;z-index:3}
@@ -326,9 +326,10 @@ function makeMacro(canvas,frameImg){
   const scene=new T.Scene(),cam=new T.PerspectiveCamera(30,1,.01,60);
   const FW=16/9,DX=(602/1280-.5)*FW,DY=.5-398/720,DR=447/720*.965;   // disc centre + radius in the last frame
   // background plate = the last zoom frame, with a soft alpha fade at the bottom for the fall
-  const pc=document.createElement('canvas');pc.width=1280;pc.height=720;const px=pc.getContext('2d');
+  const PW=HD?2560:1280,PH=HD?1440:720;
+  const pc=document.createElement('canvas');pc.width=PW;pc.height=PH;const px=pc.getContext('2d');px.imageSmoothingQuality='high';
   const plateTex=new T.CanvasTexture(pc);plateTex.colorSpace=T.SRGBColorSpace;
-  function setFrame(img){if(!img||!img.naturalWidth)return false;px.clearRect(0,0,1280,720);px.drawImage(img,0,0,1280,720);
+  function setFrame(img){if(!img||!img.naturalWidth)return false;px.clearRect(0,0,PW,PH);px.drawImage(img,0,0,PW,PH);
     plateTex.needsUpdate=true;return true;}
   let plateOK=setFrame(frameImg);
   const PE=1.7;
@@ -520,9 +521,15 @@ const vuOf=u=>u>=TL.end[0]?u-LOOP_SHIFT:u;
 /* ================= frames ================= */
 // phones in portrait get their own sharper set: the middle of each frame (x 250..950), AI-upscaled, in sheets of four
 const MOB=innerWidth<=820&&innerHeight>innerWidth*1.1;
-function seq(dir,n,k=1){return MOB?{dir:'m/'+dir,n,k:4,fw:1050,fh:1080,cx0:250,cw:700,f:new Array(n),p:{}}
-  :{dir,n,k,fw:1280,fh:720,cx0:0,cw:1280,f:new Array(n),p:{}};}
-const PLANT=seq('catch',109), DIVE=seq('dive',151,4), ROOTS=seq('grow',120), BLOOM=seq('bloom',280), HOLD=seq('hold',120,4), ZOOM=seq('zoom',22);
+// HD: frames upscaled 2x (2560x1440, phones 1400x1440). Used whenever the screen has more pixels than the 1280x720 set
+const DPR=Math.min(devicePixelRatio||1,2);
+const HD=true;   // this build ships the HD frame sets only
+function seq(dir,n,k=1){
+  if(MOB)return HD?{dir:'m-hd/'+dir,n,k:4,fw:1400,fh:1440,cx0:250,cw:700,f:new Array(n),p:{}}
+                  :{dir:'m/'+dir,n,k:4,fw:1050,fh:1080,cx0:250,cw:700,f:new Array(n),p:{}};
+  return HD?{dir:'hd/'+dir,n,k,fw:2560,fh:1440,cx0:0,cw:1280,f:new Array(n),p:{}}
+           :{dir,n,k,fw:1280,fh:720,cx0:0,cw:1280,f:new Array(n),p:{}};}
+const PLANT=seq('catch',109,4), DIVE=seq('dive',151,4), ROOTS=seq('grow',120,4), BLOOM=seq('bloom',280,4), HOLD=seq('hold',120,4), ZOOM=seq('zoom',22);
 let loaded=0;const NEED=24;
 const loader=$('#loader'), loadTxt=$('#loadTxt');
 function load(S,i){if(i>=S.n||S.f[i])return Promise.resolve();const sh=Math.floor(i/S.k);if(S.p[sh])return S.p[sh];
@@ -584,7 +591,7 @@ const G={
   sat:track([[0,1.02],[200,.95],[300,.88],[560,.92],[700,1.02],[1000,1.08],[1300,1.1],[1440,1.04],[1540,.9],[1650,.95],[1740,1],[1830,1.02]]),
   con:track([[0,1.02],[300,1.06],[700,1.02],[1300,1.03],[1540,1.08],[1700,1.02],[1830,1.02]]),
   vig:track([[0,.55],[200,.8],[300,1],[560,.95],[700,.65],[1110,.5],[1440,.6],[1560,.72],[1700,.5],[1830,.55]]),
-  grain:track([[0,.06],[300,.09],[700,.06],[1300,.05],[1560,.07],[1830,.06]]),
+  grain:track([[0,.025],[300,.04],[700,.025],[1300,.02],[1560,.03],[1830,.025]]),   // light film grain: texture without looking noisy
   tint:track([[0,0],[1000,0],[1150,.12],[1400,.14],[1480,.05],[1560,.04],[1680,0],[1830,0]]),
   push:track([[0,0],[196,0],[206,.03],[215,.065],[224,0],[1830,0]]),   // the camera lunges as it breaks through the soil surface
   roll:track([[0,0],[180,0],[240,-.012],[330,.008],[470,-.006],[560,.012],[700,0],[1110,0],[1330,-.004],[1830,0]]),
@@ -625,7 +632,7 @@ BLOOM.pos=k=>TL.bloom[0]+(k<=23?k:k<183?23+(k-23)/4:k-120)/159*(TL.bloom[1]-TL.b
 
 /* the seed head in 3D (three.js), created once the last zoom frame is in */
 let MAC=null,macFail=false;
-const Z21=new Image();Z21.src='zoom/f021.webp';   // the full last zoom frame is the seed head's backdrop
+const Z21=new Image();Z21.src=HD?'hd/zoom/f021.webp':'zoom/f021.webp';   // the full last zoom frame is the seed head's backdrop
 function macro(){if(MAC||macFail)return MAC;
   if(!window.THREE||!Z21.naturalWidth){if(!window.THREE)macFail=true;return null;}
   try{MAC=makeMacro(gl3,Z21);}catch(e){macFail=true;MAC=null;}return MAC;}
