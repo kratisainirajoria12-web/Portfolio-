@@ -23,10 +23,14 @@ Krati is a product designer. This is her scroll-driven portfolio site. Her 3D ca
 | `bloom/` | Sprout to full bloom. 280 files: E239–261 (0–22), then a 160-frame sprout bridge (23–182, made by `tools/bridge.py`), then E315–440 (183–279). The disc is recoloured brown. `bloomIdx()` in main.js maps the story frame (old 0–159 scale) to a file |
 | `hold/` | Her reference clip for the sunflower pause (camera eases back, flower sways, butterflies). Sheets of 4, 120 frames (24 fps clip, every 2nd frame), played at 12 fps forward and back; it starts on the last bloom frame and rewinds to it as the reader scrolls in or out (`holdT` in main.js) |
 | `zoom/` | Push into the flower head. 22 frames |
+| `hd/` | **What the page plays now.** Every story frame upscaled 2x (2560x1440) with Real-ESRGAN `realesr-animevideov3-x2`. catch/dive/grow/bloom/hold are sheets of 4 (`s000.webp`…); zoom is single frames (`f000.webp`…). The 1280x720 folders above are the sources and are no longer loaded |
+| `m-hd/` | Phone set made from `hd/`: centre crop x 500..1900 (1400x1440), sheets of 4, zoom included. Replaces `m/` |
 | `tools/` | Python/OpenCV scripts that generated the derived frames (paths inside point to the old scratch folder) |
 | `SEED-keyframes.txt` | Motion data extracted from theseed.volm.studio, the reference for the motion feel |
 
 **After editing `main.js` or `macro.js`, re-inline them into `index.html`.** The script tag holds `macro.js`, a newline, then `main.js`.
+
+**HD update (Oct 2026):** the inlined code in `index.html` is ahead of `main.js`/`macro.js` (phone frame sets, sheet painting, `HD=true` with `hd/` and `m-hd/`, lighter film grain, 2560x1440 seed-head plate). Treat `index.html` as the source of truth and copy changes back before re-inlining. When upscaling with ncnn, run one throwaway pass first: the first inference of a freshly loaded model comes out corrupted.
 
 ## Timeline (`TL` in main.js, units = vh of story)
 - `catch 10–200`
